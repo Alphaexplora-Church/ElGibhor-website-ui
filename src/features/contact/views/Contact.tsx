@@ -1,111 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 
-export const Contact: React.FC = () => {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        service: '',
-        adults: 1,
-        kids: 0,
-        type: 'first-time'
-    });
+export const Contact: React.FC = memo(() => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Visit RSVP Submitted", formData);
-    };
+  return (
+    <div id="contact" className="min-h-screen bg-background-dark pt-32 pb-24 relative flex items-center justify-center overflow-hidden">
+      
+      {/* Abstract Animated Glow */}
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] rounded-full bg-[conic-gradient(var(--color-royal-purple)_0deg,transparent_120deg,var(--color-gold)_240deg,transparent_360deg)] blur-[100px] opacity-20 pointer-events-none"
+      />
 
-    return (
-        <div className="py-24 px-6 bg-[#F4EDFB] border-t border-purple-200 flex flex-col items-center justify-center overflow-x-hidden relative min-h-[80vh]">
-            <div className="max-w-4xl mx-auto w-full relative">
-                {/* Background glow */}
-                <div className="absolute -top-32 right-0 w-[40rem] h-[40rem] bg-gold/10 rounded-full blur-[120px] pointer-events-none"></div>
-                <div className="absolute -bottom-32 left-0 w-[30rem] h-[30rem] bg-gold/15 rounded-full blur-[100px] pointer-events-none"></div>
-                
-                <div className="text-center mb-12 relative z-10">
-                    <div className="w-16 h-1 bg-gradient-to-r from-gold/20 via-gold to-gold/20 mx-auto rounded-full mb-8"></div>
-                    <h2 className="text-5xl md:text-6xl font-black text-gray-900 tracking-tighter leading-tight mb-4">
-                        We'll save <span className="text-royal-purple italic pr-2">a seat.</span>
-                    </h2>
-                    <p className="text-gray-700 font-light text-lg max-w-2xl mx-auto">
-                        Planning your first visit? Fill out the form below and we'll make sure to welcome you with open arms.
-                    </p>
-                </div>
+      <div className="max-w-3xl mx-auto px-6 w-full relative z-10">
+         <motion.div 
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8 }}
+         >
+           <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-4">Let's <span className="text-gold">Talk</span>.</h1>
+           <p className="text-xl text-gray-400 font-light mb-16">Whether you have a question, a prayer request, or just want to say hello, we're here for you.</p>
 
-                {/* Form */}
-                <motion.form
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{delay: 0.2}}
-                    onSubmit={handleSubmit}
-                    className="relative z-10 bg-white/60 backdrop-blur-md p-8 rounded-2xl border border-gold/20 space-y-6"
+           <form className="space-y-12">
+             
+             {/* Name Input */}
+             <div className="relative group">
+                <input 
+                  type="text" 
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full bg-transparent border-b-2 border-white/20 px-0 py-4 text-2xl md:text-3xl font-light text-white placeholder-transparent focus:outline-none focus:border-gold transition-colors peer"
+                  placeholder="I am..."
+                />
+                <label 
+                  htmlFor="name" 
+                  className="absolute left-0 top-4 text-2xl md:text-3xl font-light text-gray-500 transition-all duration-300 pointer-events-none 
+                             peer-placeholder-shown:top-4 peer-placeholder-shown:text-2xl peer-placeholder-shown:md:text-3xl peer-placeholder-shown:text-gray-500
+                             peer-focus:-top-6 peer-focus:text-sm peer-focus:text-gold peer-focus:font-bold uppercase tracking-widest
+                             -top-6 text-sm text-gold font-bold"
                 >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <input 
-                            type="text" 
-                            placeholder="First Name" 
-                            required 
-                            className="px-6 py-3 rounded-lg bg-white/80 border border-gold/20 focus:outline-none focus:border-gold transition-colors text-gray-900 placeholder-gray-500"
-                            value={formData.firstName}
-                            onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                        />
-                        <input 
-                            type="text" 
-                            placeholder="Last Name" 
-                            required 
-                            className="px-6 py-3 rounded-lg bg-white/80 border border-gold/20 focus:outline-none focus:border-gold transition-colors text-gray-900 placeholder-gray-500"
-                            value={formData.lastName}
-                            onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                        />
-                    </div>
+                  I am...
+                </label>
+             </div>
 
-                    <input 
-                        type="email" 
-                        placeholder="Email Address" 
-                        required 
-                        className="w-full px-6 py-3 rounded-lg bg-white/80 border border-gold/20 focus:outline-none focus:border-gold transition-colors text-gray-900 placeholder-gray-500"
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    />
+             {/* Email Input */}
+             <div className="relative group">
+                <input 
+                  type="email" 
+                  id="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full bg-transparent border-b-2 border-white/20 px-0 py-4 text-2xl md:text-3xl font-light text-white placeholder-transparent focus:outline-none focus:border-gold transition-colors peer"
+                  placeholder="Reach me at..."
+                />
+                <label 
+                  htmlFor="email" 
+                  className="absolute left-0 top-4 text-2xl md:text-3xl font-light text-gray-500 transition-all duration-300 pointer-events-none 
+                             peer-placeholder-shown:top-4 peer-placeholder-shown:text-2xl peer-placeholder-shown:md:text-3xl peer-placeholder-shown:text-gray-500
+                             peer-focus:-top-6 peer-focus:text-sm peer-focus:text-gold peer-focus:font-bold uppercase tracking-widest
+                             -top-6 text-sm text-gold font-bold"
+                >
+                  Reach me at...
+                </label>
+             </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <select 
-                            className="px-6 py-3 rounded-lg bg-white/80 border border-gold/20 focus:outline-none focus:border-gold transition-colors text-gray-900"
-                            value={formData.type}
-                            onChange={(e) => setFormData({...formData, type: e.target.value})}
-                        >
-                            <option value="first-time">First Time Visitor</option>
-                            <option value="returning">Returning Guest</option>
-                            <option value="member">Church Member</option>
-                        </select>
-                        <input 
-                            type="number" 
-                            min="1" 
-                            placeholder="# Adults" 
-                            className="px-6 py-3 rounded-lg bg-white/80 border border-gold/20 focus:outline-none focus:border-gold transition-colors text-gray-900"
-                            value={formData.adults}
-                            onChange={(e) => setFormData({...formData, adults: parseInt(e.target.value) || 1})}
-                        />
-                        <input 
-                            type="number" 
-                            min="0" 
-                            placeholder="# Children" 
-                            className="px-6 py-3 rounded-lg bg-white/80 border border-gold/20 focus:outline-none focus:border-gold transition-colors text-gray-900"
-                            value={formData.kids}
-                            onChange={(e) => setFormData({...formData, kids: parseInt(e.target.value) || 0})}
-                        />
-                    </div>
+             {/* Message Input */}
+             <div className="relative group">
+                <textarea 
+                  id="message"
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  rows={3}
+                  className="w-full bg-transparent border-b-2 border-white/20 px-0 py-4 text-2xl md:text-3xl font-light text-white placeholder-transparent focus:outline-none focus:border-gold transition-colors peer resize-none"
+                  placeholder="I'd like to talk about..."
+                ></textarea>
+                <label 
+                  htmlFor="message" 
+                  className="absolute left-0 top-4 text-2xl md:text-3xl font-light text-gray-500 transition-all duration-300 pointer-events-none 
+                             peer-placeholder-shown:top-4 peer-placeholder-shown:text-2xl peer-placeholder-shown:md:text-3xl peer-placeholder-shown:text-gray-500
+                             peer-focus:-top-6 peer-focus:text-sm peer-focus:text-gold peer-focus:font-bold uppercase tracking-widest
+                             -top-6 text-sm text-gold font-bold"
+                >
+                  I'd like to talk about...
+                </label>
+             </div>
 
-                    <button 
-                        type="submit"
-                        className="w-full px-8 py-4 bg-gradient-to-r from-gold to-gold-light hover:from-gold-light hover:to-gold text-royal-purple font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
-                    >
-                        Reserve Your Seat
-                    </button>
-                </motion.form>
-            </div>
-        </div>
-    );
-};
+             {/* Submit Button */}
+             <div className="pt-8">
+               <button 
+                 type="submit" 
+                 className="relative overflow-hidden group px-12 py-5 rounded-full bg-gold text-royal-purple font-black text-xl tracking-wider hover:shadow-[0_0_40px_rgba(239,191,4,0.3)] transition-shadow duration-300"
+               >
+                 <span className="relative z-10 transition-transform duration-300 group-hover:-translate-y-1 block">Send Message</span>
+                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+               </button>
+             </div>
+
+           </form>
+         </motion.div>
+      </div>
+    </div>
+  );
+});
+
+Contact.displayName = "Contact";
