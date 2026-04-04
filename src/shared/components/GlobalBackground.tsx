@@ -5,37 +5,36 @@ import { motion } from 'framer-motion';
 
 export const GlobalBackground: React.FC = () => {
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-background-dark">
+    <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-[#FAFAFA]">
 
       {/* Large subtle glowing orb - Purple */}
-      {/* Optimization: Removed CSS blur and mix-blend-mode. Radial gradient handles the soft edge. Added will-change-transform */}
       <motion.div
-        className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full opacity-30 pointer-events-none will-change-transform"
+        className="absolute top-[-20%] right-[-10%] w-[80vw] h-[80vw] rounded-full opacity-60 pointer-events-none will-change-transform"
         style={{
-          background: 'radial-gradient(circle, var(--color-royal-purple-light) 0%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(230, 220, 255, 0.8) 0%, transparent 60%)'
         }}
         animate={{
-          x: [0, 50, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.1, 1]
+          x: [0, -30, 0],
+          y: [0, 40, 0],
+          scale: [1, 1.05, 1]
         }}
         transition={{
           duration: 20,
           repeat: Infinity,
-          ease: "linear" // 'linear' is slightly cheaper to calculate than 'easeInOut'
+          ease: "linear"
         }}
       />
 
-      {/* Another glowing orb - Gold */}
+      {/* Another glowing orb - Gold/Warm */}
       <motion.div
-        className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full opacity-20 pointer-events-none will-change-transform"
+        className="absolute bottom-[-10%] left-[-10%] w-[70vw] h-[70vw] rounded-full opacity-40 pointer-events-none will-change-transform"
         style={{
-          background: 'radial-gradient(circle, var(--color-gold) 0%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(255, 237, 204, 0.7) 0%, transparent 60%)'
         }}
         animate={{
-          x: [0, -40, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1]
+          x: [0, 40, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.1, 1]
         }}
         transition={{
           duration: 25,

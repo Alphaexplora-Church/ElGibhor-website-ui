@@ -12,29 +12,29 @@ export const StrategyCards: React.FC = memo(() => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   return (
-    <section className="py-24 bg-background-card relative z-10 w-full overflow-hidden">
-      <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-gold rounded-full filter blur-[200px] opacity-[0.03] pointer-events-none"></div>
+    <section className="py-16 bg-transparent relative z-10 w-full overflow-hidden">
+      <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-royal-purple-light rounded-full filter blur-[200px] opacity-[0.05] pointer-events-none"></div>
       
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-black text-white mb-16 text-center tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-black text-royal-purple-dark mb-10 text-center tracking-tight">
           Your Next <span className="text-gold">Steps</span>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {strategies.map((strat, idx) => (
             <motion.div 
               key={idx}
               layout
               onClick={() => setActiveCard(activeCard === idx ? null : idx)}
-              initial={{ borderRadius: "1.5rem" }}
-              className={`bg-background-dark border border-white/5 cursor-pointer overflow-hidden backdrop-blur-xl transition-colors hover:border-royal-purple/50 ${activeCard === idx ? 'ring-2 ring-gold/50' : ''}`}
+              initial={{ borderRadius: "1rem" }}
+              className={`bg-white shadow-[0_4px_20px_rgba(0,0,0,0.03)] border cursor-pointer overflow-hidden transition-all ${activeCard === idx ? 'border-gold shadow-md' : 'border-black/5 hover:border-black/10 hover:shadow-md'}`}
             >
-              <motion.div layout className="p-8 focus:outline-none">
-                <motion.div layout className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6 text-gold font-bold text-xl">
+              <motion.div layout className="p-6 focus:outline-none">
+                <motion.div layout className="w-9 h-9 bg-royal-purple-dark/5 rounded-full flex items-center justify-center mb-5 text-gold-dark font-bold text-sm">
                   {idx + 1}
                 </motion.div>
-                <motion.h3 layout className="text-2xl font-bold text-white mb-2 tracking-tight">{strat.title}</motion.h3>
-                <motion.p layout className="text-gray-400 font-light leading-relaxed">{strat.excerpt}</motion.p>
+                <motion.h3 layout className="text-lg font-bold text-royal-purple-dark mb-1.5 tracking-tight">{strat.title}</motion.h3>
+                <motion.p layout className="text-gray-500 text-sm font-light leading-relaxed">{strat.excerpt}</motion.p>
                 
                 {/* Expandable Content */}
                 <AnimatePresence>
@@ -46,10 +46,10 @@ export const StrategyCards: React.FC = memo(() => {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <p className="mt-4 pt-4 border-t border-white/10 text-gray-300 text-sm leading-relaxed">
+                      <p className="mt-4 pt-4 border-t border-black/5 text-gray-600 text-sm leading-relaxed">
                         {strat.detail}
                       </p>
-                      <button className="mt-6 w-full py-3 bg-gold/10 hover:bg-gold/20 text-gold font-bold rounded-lg transition-colors border border-gold/20">
+                      <button className="mt-6 w-full py-3 bg-gold text-royal-purple-dark font-bold rounded-lg transition-colors border border-transparent hover:bg-gold-light">
                         {strat.action}
                       </button>
                     </motion.div>

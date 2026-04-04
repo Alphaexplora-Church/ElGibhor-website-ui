@@ -21,11 +21,11 @@ export const LeadershipSection: React.FC = memo(() => {
   }, []);
 
   return (
-    <section id="leaders" className="py-32 bg-background-card relative z-10 w-full overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 mb-16 flex justify-between items-end">
+    <section id="leaders" className="py-16 bg-background-card relative z-10 w-full overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 mb-10 flex justify-between items-end">
          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">Our National <span className="text-royal-purple-light">Team</span></h2>
-            <p className="text-gray-400 mt-4 max-w-lg">Dedicated men and women serving to expand God's kingdom across the nation.</p>
+            <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Our National <span className="text-royal-purple-light">Team</span></h2>
+            <p className="text-gray-500 mt-2 text-sm max-w-lg">Dedicated men and women serving to expand God's kingdom across the nation.</p>
          </motion.div>
          {/* Drag Indicator */}
          <div className="hidden md:flex items-center text-gold space-x-2 animate-pulse">
@@ -45,7 +45,7 @@ export const LeadershipSection: React.FC = memo(() => {
           {leaders.map((leader, idx) => (
             <motion.div 
               key={idx}
-              className="min-w-[300px] h-[400px] md:min-w-[400px] md:h-[500px] rounded-3xl overflow-hidden relative group"
+              className="min-w-[220px] h-[280px] md:min-w-[280px] md:h-[320px] rounded-2xl overflow-hidden relative group"
             >
                {/* Grayscale by default, color on hover */}
                <img 

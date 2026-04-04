@@ -66,7 +66,7 @@ export const Navbar: React.FC = () => {
         onMouseLeave={handleMouseLeave}
       >
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
-          <div className="flex justify-between h-24 items-center">
+          <div className="flex justify-between h-16 items-center">
 
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center group cursor-pointer z-50">

@@ -55,7 +55,8 @@ function App() {
       <SmoothScroller>
         <ScrollToTop />
         <ScrollManager />
-        <div className="font-sans antialiased text-white bg-background-dark min-h-screen flex flex-col selection:bg-gold selection:text-black">
+        {/* Changed to global light theme: light base, dark purple text */}
+        <div className="font-sans antialiased text-royal-purple-dark bg-[#FAFAFA] min-h-screen flex flex-col selection:bg-gold selection:text-white">
           <GlobalBackground />
 
           <Navbar />

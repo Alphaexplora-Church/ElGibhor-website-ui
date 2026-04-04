@@ -26,7 +26,7 @@ export const DaughterChurchesSection: React.FC = memo(() => {
   const [activeRegion, setActiveRegion] = useState(regions[0]);
 
   return (
-    <section id="churches" className="py-32 bg-background-dark relative z-10 w-full min-h-[90vh] flex flex-col justify-center overflow-hidden">
+    <section id="churches" className="py-16 bg-background-dark relative z-10 w-full overflow-hidden">
       
       {/* Massive Fading Watermark Text */}
       <AnimatePresence mode="wait">
@@ -48,8 +48,8 @@ export const DaughterChurchesSection: React.FC = memo(() => {
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8 gap-8">
            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">Daughter <span className="text-gold">Churches</span></h2>
-              <p className="text-gray-400 mt-4 max-w-md font-light">Spreading the word of God. Find a TMGAN congregation near you.</p>
+              <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Daughter <span className="text-gold">Churches</span></h2>
+              <p className="text-gray-500 mt-2 text-sm max-w-md font-light">Spreading the word of God. Find a TMGAN congregation near you.</p>
            </motion.div>
 
            {/* Tabs */}
@@ -97,7 +97,7 @@ export const DaughterChurchesSection: React.FC = memo(() => {
                   transition={{ duration: 0.4 }}
                   className="space-y-4"
                 >
-                  <h3 className="text-3xl font-bold text-white mb-8 border-l-4 border-gold pl-4">{activeRegion.title} Region</h3>
+                  <h3 className="text-xl font-bold text-white mb-5 border-l-2 border-gold pl-3">{activeRegion.title} Region</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {activeRegion.churches.map((church, idx) => (
                       <motion.div 
@@ -105,9 +105,9 @@ export const DaughterChurchesSection: React.FC = memo(() => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 * idx }}
                         key={idx} 
-                        className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 hover:border-gold/50 cursor-pointer transition-colors group"
+                        className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 hover:border-gold/50 cursor-pointer transition-colors group"
                       >
-                         <h4 className="text-xl font-bold text-gray-200 group-hover:text-gold transition-colors">{church}</h4>
+                         <h4 className="text-base font-bold text-gray-200 group-hover:text-gold transition-colors">{church}</h4>
                          <p className="text-sm text-gray-500 mt-2 font-light">Get Directions &rarr;</p>
                       </motion.div>
                     ))}
@@ -118,7 +118,7 @@ export const DaughterChurchesSection: React.FC = memo(() => {
         </div>
 
         {/* Contact Links */}
-        <div id="contact" className="mt-24 pt-12 border-t border-white/10 text-center flex flex-col items-center">
+        <div id="contact" className="mt-12 pt-8 border-t border-white/10 text-center flex flex-col items-center">
            <h3 className="text-2xl font-bold text-white mb-6">Need to reach a specific department?</h3>
            <div className="flex flex-wrap justify-center gap-4">
              <a href="mailto:leadership@tmgan.org" className="px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors">leadership@tmgan.org</a>

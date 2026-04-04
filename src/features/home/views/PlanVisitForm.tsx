@@ -11,11 +11,16 @@ export const PlanVisitForm: React.FC = memo(() => {
   };
 
   return (
-    <section className="py-24 relative z-10 w-full overflow-hidden" id="plan-visit">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl bg-royal-purple-light/10 rounded-[100%] blur-[120px] pointer-events-none"></div>
+    <section className="py-16 relative z-10 w-full overflow-hidden" id="plan-visit">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-3xl bg-royal-purple-light/20 rounded-[100%] blur-[100px] pointer-events-none"></div>
 
-      <div className="max-w-4xl mx-auto px-6 relative z-10">
-        <div className="bg-background-card/80 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+      <div className="max-w-xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-black text-royal-purple-dark mb-4 tracking-tight">We'll save a <span className="text-royal-purple-light">seat.</span></h2>
+          <p className="text-gray-500 font-light text-sm max-w-md mx-auto">Let us know you're coming so we can welcome you properly, guide you across the campus, and help you feel right at home.</p>
+        </div>
+
+        <div className="bg-royal-purple-dark border border-black/5 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
           
           {/* Internal Glow */}
           <div className="absolute -top-32 -right-32 w-64 h-64 bg-gold/20 rounded-full blur-[80px]"></div>
@@ -29,44 +34,43 @@ export const PlanVisitForm: React.FC = memo(() => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="text-center mb-10">
+                <div className="sr-only">
                   <h2 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">Plan a <span className="text-gold">Visit</span></h2>
-                  <p className="text-gray-400 font-light">We can't wait to meet you. Let us know you're coming so we can roll out the red carpet.</p>
+                  <p className="text-gray-400 font-light">We can't wait to meet you.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">Name</label>
-                       <input required type="text" className="w-full bg-background-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors" placeholder="John Doe" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                       <input required type="text" className="w-full bg-royal-purple border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors" placeholder="John Doe" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">Email</label>
-                       <input required type="email" className="w-full bg-background-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors" placeholder="john@example.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                       <label className="text-xs font-bold text-gold uppercase tracking-wider">Email</label>
+                       <input required type="email" className="w-full bg-royal-purple border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors" placeholder="john@example.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">Service Time</label>
-                       <select className="w-full bg-background-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors appearance-none" value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})}>
+                       <label className="text-xs font-bold text-gold uppercase tracking-wider">Service Time</label>
+                       <select className="w-full bg-royal-purple border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors appearance-none" value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})}>
                          <option value="10am">Sunday 10:00 AM</option>
                          <option value="2pm">Sunday 2:00 PM</option>
                          <option value="4pm">Sunday 4:00 PM</option>
                        </select>
                     </div>
                     <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">Adults</label>
-                       <input type="number" min="1" className="w-full bg-background-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors" value={formData.adults} onChange={e => setFormData({...formData, adults: parseInt(e.target.value)})} />
+                       <label className="text-xs font-bold text-gold uppercase tracking-wider">Adults</label>
+                       <input type="number" min="1" className="w-full bg-royal-purple border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors" value={formData.adults} onChange={e => setFormData({...formData, adults: parseInt(e.target.value)})} />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-400 uppercase tracking-wider">Kids (Ages 0-11)</label>
-                       <input type="number" min="0" className="w-full bg-background-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors" value={formData.kids} onChange={e => setFormData({...formData, kids: parseInt(e.target.value)})} />
+                       <label className="text-xs font-bold text-gold uppercase tracking-wider">Kids (Ages 0-11)</label>
+                       <input type="number" min="0" className="w-full bg-royal-purple border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors" value={formData.kids} onChange={e => setFormData({...formData, kids: parseInt(e.target.value)})} />
                     </div>
                   </div>
 
-                  <button type="submit" className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-gold to-gold-light text-royal-purple-dark font-black tracking-wide text-lg shadow-[0_0_20px_rgba(239,191,4,0.3)] hover:shadow-[0_0_30px_rgba(239,191,4,0.5)] transform hover:-translate-y-0.5 transition-all">
-                    Schedule My Visit
+                  <button type="submit" className="w-full mt-8 py-4 rounded-xl bg-gold text-royal-purple-dark font-black tracking-wide text-sm uppercase transition-all hover:bg-gold-light hover:shadow-lg">
+                    Continue to Guide
                   </button>
                 </form>
               </motion.div>
