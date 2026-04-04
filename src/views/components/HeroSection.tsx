@@ -1,12 +1,21 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useMediaQuery } from '../../shared/hooks/useMediaQuery';
+import { MagneticButton } from '../../shared/components/MagneticButton';
 
 export const HeroSection: React.FC = () => {
+  const { scrollY } = useScroll();
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  // Micro-parallax: subtle move on mobile, stronger on desktop
+  const yParallax = useTransform(scrollY, [0, 1000], [0, isMobile ? 50 : 250]);
+
   return (
     <section id="home" className="relative min-h-[100vh] flex items-center justify-center overflow-hidden pt-20">
-      {/* Video Background */}
-      <div className="absolute inset-0 bg-royal-purple-dark">
+      {/* Video Background with Parallax */}
+      <motion.div 
+        className="absolute inset-x-0 top-[0%] bottom-[-30%] bg-royal-purple-dark"
+        style={{ y: yParallax }}
+      >
         <video 
           autoPlay 
           loop 
@@ -19,11 +28,11 @@ export const HeroSection: React.FC = () => {
         </video>
         {/* Overlay gradient to ensure text readability and blend with the dark purple theme */}
         <div className="absolute inset-0 bg-gradient-to-b from-royal-purple-dark/60 via-background-dark/80 to-background-dark"></div>
-      </div>
+      </motion.div>
       
       {/* Decorative Orbs for extra blend */}
-      <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-royal-purple rounded-full blur-[150px] opacity-40 animate-pulse-slow"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-gold rounded-full blur-[150px] opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-royal-purple rounded-full blur-[150px] opacity-40 animate-pulse-slow pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-gold rounded-full blur-[150px] opacity-20 animate-pulse-slow pointer-events-none" style={{ animationDelay: '2s' }}></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
         {/* Main Heading */}
@@ -31,7 +40,7 @@ export const HeroSection: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl font-black tracking-tighter leading-[1.1] mb-6 drop-shadow-2xl text-white"
+          className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.1] mb-6 drop-shadow-2xl text-white"
         >
           The Mighty God
           <br />
@@ -57,13 +66,13 @@ export const HeroSection: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-8 flex flex-col sm:flex-row gap-4"
         >
-          <Link to="/plan-a-visit" className="px-6 py-3 bg-gold text-royal-purple-dark rounded-full font-bold text-base hover:bg-gold-light hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(239,191,4,0.4)] flex items-center justify-center group">
+          <MagneticButton to="/plan-a-visit" className="px-6 py-3 bg-gold text-royal-purple-dark rounded-full font-bold text-base hover:bg-gold-light hover:scale-105 transition-colors shadow-[0_0_20px_rgba(239,191,4,0.4)] flex items-center justify-center group w-full sm:w-auto">
             Plan a Visit
             <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-          </Link>
-          <Link to="/ministries" className="px-6 py-3 bg-background-card/80 backdrop-blur-md border border-royal-purple text-white rounded-full font-bold text-base hover:border-gold/50 hover:bg-royal-purple-dark active:scale-95 transition-all flex items-center justify-center group shadow-md">
+          </MagneticButton>
+          <MagneticButton to="/ministries" className="px-6 py-3 bg-background-card/80 backdrop-blur-md border border-royal-purple text-white rounded-full font-bold text-base hover:border-gold/50 hover:bg-royal-purple-dark transition-colors flex items-center justify-center group shadow-md w-full sm:w-auto">
             Our Ministries
-          </Link>
+          </MagneticButton>
         </motion.div>
       </div>
 

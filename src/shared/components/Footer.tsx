@@ -9,13 +9,13 @@ export const Footer: React.FC = () => {
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-royal-purple/10 rounded-full blur-[100px]"></div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center md:items-start gap-12">
-        
+
         <div className="md:w-1/2 text-center md:text-left">
-           <h2 className="text-4xl font-bold text-white mb-2 tracking-tight group cursor-pointer transition-colors hover:text-gold">El Ghibor</h2>
-           <p className="text-sm font-medium text-royal-purple-light uppercase tracking-widest pl-1 mb-6">The Mighty God of All Nations Inc.</p>
-           <p className="text-gray-400 max-w-md mx-auto md:mx-0 leading-relaxed mb-6">
-             A movement of devoted Christ-followers dedicated to guiding others in their faith journey, all for the glory of God.
-           </p>
+          <h2 className="text-4xl font-bold text-white mb-2 tracking-tight group cursor-pointer transition-colors hover:text-gold">El Gibhor</h2>
+          <p className="text-sm font-medium text-royal-purple-light uppercase tracking-widest pl-1 mb-6">The Mighty God of All Nations Inc.</p>
+          <p className="text-gray-400 max-w-md mx-auto md:mx-0 leading-relaxed mb-6">
+            A movement of devoted Christ-followers dedicated to guiding others in their faith journey, all for the glory of God.
+          </p>
         </div>
 
         <div className="flex flex-col items-center md:items-end space-y-6">

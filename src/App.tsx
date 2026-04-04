@@ -1,3 +1,5 @@
+//App.tsx
+
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -6,6 +8,8 @@ import { Navbar } from './shared/components/Navbar';
 import { Footer } from './shared/components/Footer';
 import { GlobalBackground } from './shared/components/GlobalBackground';
 import { SmoothScroller } from './shared/components/SmoothScroller';
+import { ScrollManager } from './shared/components/ScrollManager';
+import { ScrollToTop } from './shared/components/ScrollToTop';
 
 // Lazy loading route components heavily to improve layout paint parsing times
 const Home = lazy(() => import('./features/home/views/Home').then(m => ({ default: m.Home })));
@@ -19,8 +23,8 @@ const PrayerWall = lazy(() => import('./features/prayer/views/PrayerWall').then(
 // A lightweight fallback spinner strictly using minimal CSS
 const PageLoader = () => (
   <div className="flex h-[50vh] items-center justify-center">
-    <motion.div 
-      animate={{ rotate: 360, scale: [1, 1.2, 1] }} 
+    <motion.div
+      animate={{ rotate: 360, scale: [1, 1.2, 1] }}
       transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
       className="w-12 h-12 border-t-2 border-r-2 border-gold rounded-full"
     />
@@ -29,9 +33,9 @@ const PageLoader = () => (
 
 const AnimatedRoutes = () => {
   const location = useLocation();
-  
+
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' })}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
@@ -47,23 +51,26 @@ const AnimatedRoutes = () => {
 
 function App() {
   return (
-    <SmoothScroller>
-      <BrowserRouter>
+    <BrowserRouter>
+      <SmoothScroller>
+        <ScrollToTop />
+        <ScrollManager />
         <div className="font-sans antialiased text-white bg-background-dark min-h-screen flex flex-col selection:bg-gold selection:text-black">
           <GlobalBackground />
-          
+
           <Navbar />
-          
+
           <main className="flex-grow z-10 w-full relative">
             <Suspense fallback={<PageLoader />}>
-               <AnimatedRoutes />
+              <AnimatedRoutes />
             </Suspense>
           </main>
-          
+
           <Footer />
         </div>
-      </BrowserRouter>
-    </SmoothScroller>
+      </SmoothScroller>
+    </BrowserRouter>
+
   );
 }
 
