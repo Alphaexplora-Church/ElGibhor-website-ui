@@ -37,7 +37,7 @@ export const Home: React.FC = () => {
                            <div className="w-10 h-1 bg-gradient-to-r from-gold to-gold-light rounded-full"></div>
                            <span className="text-gold font-bold uppercase tracking-widest text-sm">Community</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900">Find Your <span className="text-royal-purple">Place</span></h2>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900">hello <span className="text-royal-purple">Place</span></h2>
                      </motion.div>
                      <motion.div
                         initial={{ opacity: 0, x: 30 }}
@@ -92,7 +92,7 @@ export const Home: React.FC = () => {
                            <motion.div layoutId={`ministry-content-${selectedMinistry.id}`} className="absolute bottom-10 left-8 right-8 z-10 pointer-events-none">
                               <h3 className="text-4xl md:text-5xl font-black text-white">{selectedMinistry.title}</h3>
                            </motion.div>
-                           <button 
+                           <button
                               onClick={() => setSelectedMinistry(null)}
                               className="absolute top-8 right-8 z-50 p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-colors"
                            >
@@ -130,7 +130,7 @@ export const Home: React.FC = () => {
                   className="flex flex-col lg:col-start-1 lg:row-start-1 order-1"
                >
                   <span className="text-gold font-bold uppercase tracking-widest text-sm mb-2 block">Our Services</span>
-                  <h2 className="text-4xl md:text-5xl font-black text-white mb-2 lg:mb-6">Worship, Care, <br className="hidden sm:block"/>& <span className="italic font-light">Community</span>.</h2>
+                  <h2 className="text-4xl md:text-5xl font-black text-white mb-2 lg:mb-6">Worship, Care, <br className="hidden sm:block" />& <span className="italic font-light">Community</span>.</h2>
                </motion.div>
 
                {/* Mobile Image (Order 2, sits directly between title and desc on mobile. On desktop spans the right side) */}

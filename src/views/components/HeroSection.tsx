@@ -70,7 +70,7 @@ export const HeroSection: React.FC = () => {
             Plan a Visit
             <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform stroke-[3px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
           </MagneticButton>
-          <MagneticButton to="/ministries" className="px-6 py-3 bg-background-card/80 backdrop-blur-md border border-royal-purple text-white rounded-full font-bold text-base hover:border-gold/50 hover:bg-royal-purple-dark transition-colors flex items-center justify-center group shadow-md w-full sm:w-auto">
+          <MagneticButton to="/experience#ministries" className="px-6 py-3 bg-background-card/80 backdrop-blur-md border border-royal-purple text-white rounded-full font-bold text-base hover:border-gold/50 hover:bg-royal-purple-dark transition-colors flex items-center justify-center group shadow-md w-full sm:w-auto">
             Our Ministries
           </MagneticButton>
         </motion.div>

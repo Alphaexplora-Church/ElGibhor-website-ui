@@ -12,9 +12,9 @@ export const StrategyCards: React.FC = memo(() => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   return (
-    <section className="py-16 bg-transparent relative z-10 w-full overflow-hidden">
+    <section className="py-16 bg-[#F4EDFB] relative z-10 w-full overflow-hidden">
       <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-royal-purple-light rounded-full filter blur-[200px] opacity-[0.05] pointer-events-none"></div>
-      
+
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-black text-royal-purple-dark mb-10 text-center tracking-tight">
           Your Next <span className="text-gold">Steps</span>
@@ -22,7 +22,7 @@ export const StrategyCards: React.FC = memo(() => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {strategies.map((strat, idx) => (
-            <motion.div 
+            <motion.div
               key={idx}
               layout
               onClick={() => setActiveCard(activeCard === idx ? null : idx)}
@@ -35,7 +35,7 @@ export const StrategyCards: React.FC = memo(() => {
                 </motion.div>
                 <motion.h3 layout className="text-lg font-bold text-royal-purple-dark mb-1.5 tracking-tight">{strat.title}</motion.h3>
                 <motion.p layout className="text-gray-500 text-sm font-light leading-relaxed">{strat.excerpt}</motion.p>
-                
+
                 {/* Expandable Content */}
                 <AnimatePresence>
                   {activeCard === idx && (

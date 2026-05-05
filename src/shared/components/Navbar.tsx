@@ -123,10 +123,10 @@ export const Navbar: React.FC = () => {
 
             {/* Quick Actions */}
             <div className="hidden lg:flex items-center space-x-4 z-50">
-              <button onClick={() => setIsVisitModalOpen(true)} className="text-sm font-bold text-white hover:text-gold transition-colors">
+              <button onClick={() => setIsVisitModalOpen(true)} className="px-6 py-2.5 rounded-full bg-gold text-royal-purple-dark text-sm font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_15px_rgba(239,191,4,0.3)]">
                 Plan a Visit
               </button>
-              <Link to="/watch" onClick={() => handleNavClick('/watch')} className="px-6 py-2.5 rounded-full bg-gold text-royal-purple font-bold tracking-wide hover:shadow-[0_0_20px_rgba(239,191,4,0.4)] transition-all transform hover:-translate-y-0.5">
+              <Link to="/watch" onClick={() => handleNavClick('/watch')} className="px-6 py-2.5 rounded-full bg-white/10 border border-white/20 text-white font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all transform hover:-translate-y-0.5 backdrop-blur-md">
                 Watch Live
               </Link>
             </div>

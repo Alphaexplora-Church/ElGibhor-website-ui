@@ -19,6 +19,7 @@ const Give = lazy(() => import('./features/give/views/Give').then(m => ({ defaul
 const Contact = lazy(() => import('./features/contact/views/Contact').then(m => ({ default: m.Contact })));
 const Watch = lazy(() => import('./features/watch/views/Watch').then(m => ({ default: m.Watch })));
 const PrayerWall = lazy(() => import('./features/prayer/views/PrayerWall').then(m => ({ default: m.PrayerWall })));
+const Ministry = lazy(() => import('./features/ministries/views/Ministry').then(m => ({ default: m.Ministry })));
 
 // A lightweight fallback spinner strictly using minimal CSS
 const PageLoader = () => (
@@ -44,6 +45,7 @@ const AnimatedRoutes = () => {
         <Route path="/engage" element={<Contact />} />
         <Route path="/watch" element={<Watch />} />
         <Route path="/prayer" element={<PrayerWall />} />
+        <Route path="/ministries" element={<Ministry />} />
       </Routes>
     </AnimatePresence>
   );
