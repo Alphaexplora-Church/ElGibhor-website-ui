@@ -58,7 +58,7 @@ function App() {
         <ScrollToTop />
         <ScrollManager />
         {/* Changed to global light theme: light base, dark purple text */}
-        <div className="font-sans antialiased text-royal-purple-dark bg-[#FAFAFA] min-h-screen flex flex-col selection:bg-gold selection:text-white">
+        <div className="font-sans antialiased text-royal-purple-dark bg-[#FAFAFA] min-h-screen flex flex-col selection:bg-gold selection:text-white overflow-x-hidden">
           <GlobalBackground />
 
           <Navbar />

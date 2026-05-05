@@ -71,7 +71,7 @@ export const Navbar: React.FC = () => {
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center group cursor-pointer z-50">
               <Link to="/" onClick={() => handleNavClick('/')} className="text-2xl font-black tracking-tighter text-white group-hover:text-gold transition-colors duration-300">
-                TMGAN
+                EL GIBHOR
               </Link>
             </div>
 
@@ -123,10 +123,22 @@ export const Navbar: React.FC = () => {
 
             {/* Quick Actions */}
             <div className="hidden lg:flex items-center space-x-4 z-50">
-              <button onClick={() => setIsVisitModalOpen(true)} className="px-6 py-2.5 rounded-full bg-gold text-royal-purple-dark text-sm font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_15px_rgba(239,191,4,0.3)]">
+              <button
+                onClick={() => setIsVisitModalOpen(true)}
+                className="flex items-center justify-center h-11 px-7 rounded-full bg-gold text-royal-purple-dark text-sm font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_15px_rgba(239,191,4,0.3)] border border-transparent"
+              >
                 Plan a Visit
               </button>
-              <Link to="/watch" onClick={() => handleNavClick('/watch')} className="px-6 py-2.5 rounded-full bg-white/10 border border-white/20 text-white font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all transform hover:-translate-y-0.5 backdrop-blur-md">
+              <Link
+                to="/watch"
+                onClick={() => handleNavClick('/watch')}
+                className="flex items-center justify-center h-11 px-7 rounded-full bg-white/10 border border-white/20 text-white text-sm font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all transform hover:scale-105 active:scale-95 backdrop-blur-md"
+              >
+                {/* Live Indicator Dot */}
+                <span className="relative flex h-2.5 w-2.5 mr-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                </span>
                 Watch Live
               </Link>
             </div>
@@ -197,10 +209,22 @@ export const Navbar: React.FC = () => {
                 transition={{ delay: 0.5 }}
                 className="mt-8 pt-8 border-t border-white/10 flex flex-col space-y-4"
               >
-                <button onClick={() => { setIsMobileMenuOpen(false); setIsVisitModalOpen(true); }} className="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-colors">
+                <button
+                  onClick={() => { setIsMobileMenuOpen(false); setIsVisitModalOpen(true); }}
+                  className="flex items-center justify-center h-14 w-full rounded-xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-colors"
+                >
                   Plan a Visit
                 </button>
-                <Link to="/watch" onClick={() => handleNavClick('/watch')} className="w-full py-4 text-center rounded-xl bg-gold text-royal-purple font-black shadow-xl">
+                <Link
+                  to="/watch"
+                  onClick={() => handleNavClick('/watch')}
+                  className="flex items-center justify-center h-14 w-full rounded-xl bg-gold text-royal-purple font-black shadow-xl"
+                >
+                  {/* Live Indicator Dot (Mobile) */}
+                  <span className="relative flex h-3 w-3 mr-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                  </span>
                   Watch Live
                 </Link>
               </motion.div>

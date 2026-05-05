@@ -57,7 +57,7 @@ export const HeroSection: React.FC = () => {
           className="mt-12 flex flex-col sm:flex-row gap-6 justify-center"
         >
           <Link
-            to="/ministries"
+            to="/experience#ministries"
             className="px-10 py-4 bg-gradient-to-r from-gold to-gold-light hover:from-gold-light hover:to-gold text-royal-purple font-bold rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
           >
             Explore Ministries

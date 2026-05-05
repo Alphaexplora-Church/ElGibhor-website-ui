@@ -16,7 +16,7 @@ export const Home: React.FC = memo(() => {
       <WelcomeVideo />
       <WhatToExpect />
       <PlanVisitForm />
-      <FooterCTA />
+
     </div>
   );
 });
