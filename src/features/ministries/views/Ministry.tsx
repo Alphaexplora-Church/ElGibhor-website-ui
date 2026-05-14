@@ -55,8 +55,8 @@ export const Ministry: React.FC = () => {
             className="text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-none"
           >
             Grow in{' '}
-            {/* Added pr-2 to prevent the italic 'h' from getting clipped */}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light via-gold to-gold-dark italic pr-3">
+            {/* Add pr-2 to the end of the className */}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light via-gold to-gold-dark italic pr-2">
               Faith
             </span>
           </motion.h1>
