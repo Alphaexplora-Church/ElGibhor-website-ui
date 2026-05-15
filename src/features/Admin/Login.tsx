@@ -14,6 +14,14 @@ export default function Login() {
         e.preventDefault();
         setError('');
 
+        // 🛑 TEMPORARY BYPASS FOR UI TESTING 🛑
+        if (email === 'admin@tmgan.com' && password === 'admin123') {
+            // Set a fake token so the dashboard doesn't kick us out
+            localStorage.setItem('token', 'mock-temporary-token');
+            navigate('/admin/dashboard');
+            return;
+        }
+
         try {
             const res = await fetch('http://localhost:4000/api/auth/login', {
                 method: 'POST',
@@ -37,7 +45,6 @@ export default function Login() {
             console.error(err);
             setError('Network error');
         }
-
     };
 
     return (

@@ -5,7 +5,8 @@ import { DaughterChurchesSection } from './DaughterChurchesSection';
 
 export const AboutUs: React.FC = memo(() => {
   return (
-    <div className="bg-transparent flex flex-col w-full relative z-10 overflow-hidden">      <Manifesto />
+    <div className="bg-transparent flex flex-col w-full relative z-10 overflow-hidden">
+      <Manifesto />
       <LeadershipSection />
       <DaughterChurchesSection />
     </div>

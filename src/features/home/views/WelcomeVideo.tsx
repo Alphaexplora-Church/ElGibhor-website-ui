@@ -1,106 +1,98 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 
 export const WelcomeVideo: React.FC = memo(() => {
-  const [isPlaying, setIsPlaying] = useState(false);
-
   return (
-    <section className="relative w-full z-10 py-16 md:py-24">
-      {/* Removed overflow-x-hidden as it conflicts with Lenis smooth scrolling */}
+    <section className="relative w-full z-10 py-16 md:py-28 overflow-hidden">
+      {/* Background Gradients */}
+      <div className="absolute inset-0 bg-background-dark pointer-events-none -z-10"></div>
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(75,42,111,0.15),transparent_70%)] pointer-events-none -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(239,191,4,0.05),transparent_70%)] pointer-events-none -z-10"></div>
 
-      {/* New Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-royal-purple-dark/70 via-background-dark/90 to-background-dark pointer-events-none -z-10"></div>
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
-
-        {/* Header Context */}
-        <div className="text-center mb-12">
+          {/* --- LEFT SIDE: Portrait Image --- */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center gap-4 mb-4"
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-5 relative group"
           >
-            <div className="h-px w-12 bg-gold/50"></div>
-            <span className="text-gold font-bold uppercase tracking-[0.3em] text-sm">Welcome Home</span>
-            <div className="h-px w-12 bg-gold/50"></div>
+            {/* Decorative Gold Frame (Offset) */}
+            <div className="absolute inset-0 border-2 border-gold/30 rounded-[2.5rem] translate-x-4 translate-y-4 md:translate-x-6 md:translate-y-6 -z-10 transition-transform duration-500 group-hover:translate-x-8 group-hover:translate-y-8"></div>
+
+            {/* Main Image Container */}
+            <div className="relative w-full aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-white/5 backdrop-blur-sm">
+              <img
+                // Placeholder image of a welcoming couple/leaders. Change URL to your real pastors!
+                src="/assets/Photos/SamplePastor.jpg"
+                alt="Church Leadership"
+                loading="lazy"
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[2s] ease-out filter grayscale-[20%] group-hover:grayscale-0"
+              />
+              {/* Subtle inner gradient so the image isn't too flat */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent"></div>
+            </div>
+
+            {/* Floating Name Tag */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="absolute -bottom-6 -left-4 md:-left-8 bg-[#0C0515] border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] px-6 py-4 rounded-2xl backdrop-blur-xl"
+            >
+              <p className="text-white font-black text-lg tracking-tight">John & Jane Doe</p>
+              <p className="text-gold text-xs font-bold uppercase tracking-widest mt-1">Lead Pastors</p>
+            </motion.div>
           </motion.div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6"
-          >
-            A Place for <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-gold italic pr-2">Everyone</span>
-          </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+          {/* --- RIGHT SIDE: The Letter --- */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="text-gray-300 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="lg:col-span-7 flex flex-col justify-center mt-8 lg:mt-0"
           >
-            We're so glad you're here. Watch this brief message from our leadership team to learn more about our heart, our vision, and how you can get connected.
-          </motion.p>
+            {/* Small Eyebrow Heading */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-px w-10 bg-gold"></div>
+              <span className="text-gold font-bold uppercase tracking-[0.25em] text-xs md:text-sm">Welcome Home</span>
+            </div>
+
+            {/* Main Headline */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter mb-8 leading-[1.1]">
+              You truly <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-gold italic pr-2">belong</span> here.
+            </h2>
+
+            {/* The Letter Body */}
+            <div className="space-y-6 text-gray-300 text-lg md:text-xl font-light leading-relaxed">
+              <p>
+                Whether you've grown up in church your entire life, or this is your very first time stepping into a community of faith, we want you to know one thing: <strong className="text-white font-bold">you are welcome exactly as you are.</strong>
+              </p>
+              <p>
+                TMGAN wasn't built to be a museum for perfect people, but a hospital for the broken. It's a place to find authentic relationships, discover your God-given purpose, and experience a grace that changes everything.
+              </p>
+              <p>
+                Take a look around, plan a visit, and please don't hesitate to reach out if you have any questions. We can't wait to meet you this weekend!
+              </p>
+            </div>
+
+            {/* The Signature */}
+            <div className="mt-12 pt-8 border-t border-white/10">
+              <p className="text-gray-500 text-sm font-bold uppercase tracking-widest mb-2">With Love & Expectation,</p>
+              {/* Using font-serif and italic to mimic a signature */}
+              <p className="font-serif italic text-4xl text-gold-light tracking-wide">
+                The Leadership Team
+              </p>
+            </div>
+
+          </motion.div>
         </div>
-
-        {/* Video Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] group cursor-pointer border border-white/10"
-          onClick={() => setIsPlaying(true)}
-          style={{ willChange: "transform, opacity" }}
-        >
-          {!isPlaying ? (
-            <>
-              <img
-                src="https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=1600&q=80"
-                alt="Senior Pastor Welcome"
-                loading="lazy"
-                className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1.5s] ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background-dark/90 via-background-dark/20 to-transparent"></div>
-
-              {/* Perfectly Centered Play Button */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gold/90 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 group-hover:bg-gold transition-all duration-300 shadow-[0_0_30px_rgba(239,191,4,0.4)]">
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-royal-purple-dark translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Bottom Text Overlay */}
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 md:bottom-8 md:left-8 md:right-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-4">
-                <div>
-                  <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-white drop-shadow-lg tracking-tight mb-1 md:mb-2 leading-tight">Welcome to TMGAN</h3>
-                  <p className="text-gold-light font-medium tracking-wide text-xs sm:text-sm md:text-base">A message from our leadership team</p>
-                </div>
-                <div className="hidden sm:flex px-3 py-1.5 md:px-4 md:py-2 bg-black/50 backdrop-blur-md rounded-lg border border-white/10 text-white text-xs md:text-sm font-bold items-center gap-1.5 md:gap-2">
-                  <svg className="w-3 h-3 md:w-4 md:h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  Watch Video
-                </div>
-              </div>
-            </>
-          ) : (
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0"
-              title="Welcome Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 w-full h-full"
-            ></iframe>
-          )}
-        </motion.div>
       </div>
     </section>
   );

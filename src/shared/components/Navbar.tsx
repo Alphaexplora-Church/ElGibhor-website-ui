@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
+// Assuming this component exists in your project
 import { PlanVisitModal } from './PlanVisitModal';
 
 const navData = [
@@ -24,7 +25,14 @@ const navData = [
     ]
   },
   { name: 'Give', path: '/give' },
-  { name: 'Contact', path: '/engage#contact' }
+  { 
+    name: 'Engage', 
+    path: '/engage',
+    dropdown: [
+      { title: 'Serve', sub: 'Make a Difference', path: '/engage#serve' },
+      { title: 'Contact', sub: 'Let\'s Talk', path: '/engage#contact' }
+    ]
+  }
 ];
 
 export const Navbar: React.FC = () => {
@@ -37,6 +45,7 @@ export const Navbar: React.FC = () => {
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
 
+    // Auto-close menus on scroll down
     if (latest > previous && latest > 150) {
       setIsMobileMenuOpen(false);
       setActiveDropdown(null);
@@ -53,7 +62,6 @@ export const Navbar: React.FC = () => {
     setActiveDropdown(null);
   }, []);
 
-  // Closes the menu UI natively without prematurely forcing scroll jumps
   const handleNavClick = (_path?: string) => {
     setIsMobileMenuOpen(false);
     setActiveDropdown(null);
@@ -62,22 +70,34 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${hasScrolled || isMobileMenuOpen ? 'bg-royal-purple/95 backdrop-blur-md border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${hasScrolled || isMobileMenuOpen
+            ? 'bg-royal-purple/95 backdrop-blur-md border-b border-white/5 shadow-2xl'
+            : 'bg-transparent'
+          }`}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+          {/* Main Desktop/Mobile Container - Height transitions from h-16 to h-24 on Large Screens */}
+          <div className="flex justify-between h-16 lg:h-24 items-center transition-all duration-500">
 
-            {/* Logo */}
+            {/* --- Logo --- */}
             <div className="flex-shrink-0 flex items-center group cursor-pointer z-50">
-              <Link to="/" onClick={() => handleNavClick('/')} className="text-2xl font-black tracking-tighter text-white group-hover:text-gold transition-colors duration-300">
-                EL GIBHOR
+              <Link
+                to="/"
+                onClick={() => handleNavClick('/')}
+                className="transition-transform duration-300 group-hover:scale-105"
+              >
+                <img
+                  src="/LOGO1.png"
+                  alt="El Gibhor Logo"
+                  className="h-14 md:h-20 w-auto object-contain drop-shadow-[0_0_15px_rgba(239,191,4,0.2)]"
+                />
               </Link>
             </div>
 
-            {/* Desktop Links (Pill) */}
+            {/* --- Desktop Links (Floating Pill Style) --- */}
             <div className="hidden lg:flex flex-1 justify-center relative">
-              <div className="flex space-x-1 items-center bg-white/5 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/10 relative">
+              <div className="flex space-x-1 items-center bg-white/5 backdrop-blur-md rounded-full px-3 py-2 border border-white/10 relative">
                 {navData.map(link => (
                   <div
                     key={link.name}
@@ -87,12 +107,12 @@ export const Navbar: React.FC = () => {
                     <Link
                       to={link.path}
                       onClick={() => handleNavClick(link.path)}
-                      className="px-5 py-2 text-sm font-medium text-gray-200 rounded-full hover:text-white hover:bg-white/10 transition-all duration-300 block"
+                      className="px-6 py-2.5 text-sm lg:text-base font-medium text-gray-200 rounded-full hover:text-white hover:bg-white/10 transition-all duration-300 block"
                     >
                       {link.name}
                     </Link>
 
-                    {/* Dropdown Menu */}
+                    {/* --- Dropdown Menu --- */}
                     <AnimatePresence>
                       {activeDropdown === link.name && link.dropdown && (
                         <motion.div
@@ -100,17 +120,21 @@ export const Navbar: React.FC = () => {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 10, scale: 0.95 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute left-1/2 -translate-x-1/2 mt-4 w-64 bg-background-card border border-border-dark rounded-2xl shadow-2xl overflow-hidden p-2"
+                          className="absolute left-1/2 -translate-x-1/2 mt-6 w-72 bg-[#1A0B2E]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden p-2"
                         >
                           {link.dropdown.map(drop => (
                             <Link
                               key={drop.title}
                               to={drop.path}
                               onClick={() => handleNavClick(drop.path)}
-                              className="block px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group/item"
+                              className="block px-5 py-4 rounded-xl hover:bg-white/5 transition-colors group/item"
                             >
-                              <div className="text-white font-bold text-sm group-hover/item:text-gold transition-colors">{drop.title}</div>
-                              <div className="text-gray-400 text-xs mt-0.5">{drop.sub}</div>
+                              <div className="text-white font-bold text-sm lg:text-base group-hover/item:text-gold transition-colors">
+                                {drop.title}
+                              </div>
+                              <div className="text-gray-400 text-xs mt-1">
+                                {drop.sub}
+                              </div>
                             </Link>
                           ))}
                         </motion.div>
@@ -121,21 +145,20 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="hidden lg:flex items-center space-x-4 z-50">
+            {/* --- Quick Actions --- */}
+            <div className="hidden lg:flex items-center space-x-6 z-50">
               <button
                 onClick={() => setIsVisitModalOpen(true)}
-                className="flex items-center justify-center h-11 px-7 rounded-full bg-gold text-royal-purple-dark text-sm font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_15px_rgba(239,191,4,0.3)] border border-transparent"
+                className="flex items-center justify-center h-11 lg:h-14 px-7 lg:px-9 rounded-full bg-gold text-royal-purple-dark text-sm lg:text-base font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_20px_rgba(239,191,4,0.4)] border border-transparent"
               >
                 Plan a Visit
               </button>
               <Link
                 to="/watch"
                 onClick={() => handleNavClick('/watch')}
-                className="flex items-center justify-center h-11 px-7 rounded-full bg-white/10 border border-white/20 text-white text-sm font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all transform hover:scale-105 active:scale-95 backdrop-blur-md"
+                className="flex items-center justify-center h-11 lg:h-14 px-7 lg:px-9 rounded-full bg-white/10 border border-white/20 text-white text-sm lg:text-base font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all transform hover:scale-105 active:scale-95 backdrop-blur-md"
               >
-                {/* Live Indicator Dot */}
-                <span className="relative flex h-2.5 w-2.5 mr-2.5">
+                <span className="relative flex h-2.5 w-2.5 mr-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                 </span>
@@ -143,14 +166,19 @@ export const Navbar: React.FC = () => {
               </Link>
             </div>
 
-            {/* Mobile menu button */}
+            {/* --- Mobile Menu Toggle --- */}
             <div className="lg:hidden z-50 relative">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-full text-white hover:bg-white/10 transition-colors focus:outline-none"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                  />
                 </svg>
               </button>
             </div>
@@ -158,7 +186,7 @@ export const Navbar: React.FC = () => {
         </div>
       </motion.nav>
 
-      {/* Mobile Full Screen Reveal Menu */}
+      {/* --- Mobile Full Screen Reveal Menu --- */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -220,7 +248,6 @@ export const Navbar: React.FC = () => {
                   onClick={() => handleNavClick('/watch')}
                   className="flex items-center justify-center h-14 w-full rounded-xl bg-gold text-royal-purple font-black shadow-xl"
                 >
-                  {/* Live Indicator Dot (Mobile) */}
                   <span className="relative flex h-3 w-3 mr-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
@@ -237,3 +264,5 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
+
+Navbar.displayName = "Navbar";

@@ -3,7 +3,7 @@ import { FaFacebook, FaInstagram, FaEnvelope } from 'react-icons/fa';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-background-card border-t border-border-dark py-10 relative overflow-hidden mt-auto">
+    <footer className="bg-background-card border-t border-border-dark py-10 relative z-[1] overflow-hidden mt-auto">
       {/* Subtle top accent line */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-royal-purple/40 to-transparent"></div>
 

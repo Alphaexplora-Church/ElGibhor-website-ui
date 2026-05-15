@@ -156,14 +156,13 @@ export const Ministry: React.FC = () => {
                               </p>
 
                               <div className="space-y-2">
-                                <a href="#" className="group/link flex items-center justify-between py-6 border-b border-white/10 hover:border-gold transition-colors duration-300">
+                                <a
+                                  href={`https://m.me/TMGNcommunity?ref=join-${ministry.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="group/link flex items-center justify-between py-6 border-b border-white/10 hover:border-gold transition-colors duration-300"
+                                >
                                   <span className="text-xl font-bold text-white group-hover/link:text-gold transition-colors">Join this Ministry</span>
-                                  <svg className="w-6 h-6 text-gold transform group-hover/link:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                  </svg>
-                                </a>
-                                <a href="#" className="group/link flex items-center justify-between py-6 border-b border-white/10 hover:border-gold transition-colors duration-300">
-                                  <span className="text-xl font-bold text-white group-hover/link:text-gold transition-colors">Service Times</span>
                                   <svg className="w-6 h-6 text-gold transform group-hover/link:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                   </svg>

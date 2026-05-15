@@ -5,7 +5,6 @@ import { StrategyCards } from './StrategyCards';
 import { WelcomeVideo } from './WelcomeVideo';
 import { WhatToExpect } from './WhatToExpect';
 import { PlanVisitForm } from './PlanVisitForm';
-import { FooterCTA } from './FooterCTA';
 
 export const Home: React.FC = memo(() => {
   return (

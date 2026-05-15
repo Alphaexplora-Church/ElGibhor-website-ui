@@ -2,6 +2,8 @@ import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useEventsViewModel } from '../events/useEventsViewModel';
 
+const PLACEHOLDER_IMG = "https://c.pxhere.com/photos/15/67/banner_header_easter_cross_sunset_sunrise_hill_sky-645931.jpg!d";
+
 export const Events: React.FC = memo(() => {
   const { isLoading, error, featuredEvent, secondaryEvents, announcements } = useEventsViewModel();
 
@@ -46,29 +48,28 @@ export const Events: React.FC = memo(() => {
 
         {/* --- MAIN EDITORIAL LAYOUT --- */}
         {!isLoading && !error && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-20">
+          // Fixed Spacing: Changed h-[650px] to min-h-[650px] and increased bottom margin (mb-24) to prevent overlap
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 mb-24 lg:min-h-[650px] items-stretch">
 
-            {/* Featured Hero Event (Admin: id, title, description, location, category, start/end dates) */}
+            {/* Featured Hero Event */}
             {featuredEvent && (
               <motion.div
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
-                className="lg:col-span-8 group relative rounded-[2rem] overflow-hidden aspect-square sm:aspect-video lg:aspect-auto lg:h-[600px] cursor-pointer shadow-2xl border border-white/5"
+                className="lg:col-span-8 group relative rounded-[2rem] overflow-hidden min-h-[450px] lg:min-h-[650px] cursor-pointer shadow-2xl border border-white/5 flex flex-col"
               >
-                {featuredEvent.hasImage ? (
-                  <>
-                    <img src={featuredEvent.img} alt={featuredEvent.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/50 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </>
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-royal-purple-dark via-background-dark to-black flex flex-col justify-center px-8 md:px-20 border-l-8 border-gold">
-                    <div className="absolute top-10 right-10 opacity-5 select-none pointer-events-none">
-                      <svg className="w-64 h-64 text-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z" /></svg>
-                    </div>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(239,191,4,0.15),transparent_70%)] pointer-events-none"></div>
-                  </div>
-                )}
+                {/* FIXED: Added onError fallback so broken images swap to placeholder instantly */}
+                <img
+                  src={(featuredEvent.hasImage && featuredEvent.img) ? featuredEvent.img : PLACEHOLDER_IMG}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; // prevents looping
+                    e.currentTarget.src = PLACEHOLDER_IMG;
+                  }}
+                  alt={featuredEvent.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end">
+                <div className="relative z-10 p-8 md:p-12 flex flex-col justify-end h-full">
                   <div className="flex items-center gap-3 mb-4 flex-wrap">
                     {featuredEvent.category && (
                       <span className="px-4 py-1.5 rounded-full bg-gold text-royal-purple-dark text-xs font-black uppercase tracking-wider">
@@ -81,17 +82,16 @@ export const Events: React.FC = memo(() => {
                     </span>
                   </div>
 
-                  <h3 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">{featuredEvent.title}</h3>
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-tight">{featuredEvent.title}</h3>
                   <p className="text-gray-300 text-lg md:text-xl max-w-2xl font-light mb-6 line-clamp-2">{featuredEvent.desc}</p>
 
-                  {/* Date Range Display (Combines Date, Time, and Day from Admin) */}
                   <div className="flex flex-col sm:flex-row gap-4 text-sm font-bold text-white/70">
                     <div className="flex items-center gap-2">
                       <span className="text-gold uppercase text-[10px] tracking-widest">Starts:</span>
                       <span>{featuredEvent.startFull}</span>
                     </div>
                     {featuredEvent.endFull && (
-                      <div className="flex items-center gap-2 border-l border-white/20 pl-4">
+                      <div className="flex items-center gap-2 sm:border-l sm:border-white/20 sm:pl-4">
                         <span className="text-gold uppercase text-[10px] tracking-widest">Ends:</span>
                         <span>{featuredEvent.endFull}</span>
                       </div>
@@ -101,45 +101,47 @@ export const Events: React.FC = memo(() => {
               </motion.div>
             )}
 
-            {/* Secondary Events Grid */}
-            <div className="lg:col-span-4 flex flex-col gap-8">
+            {/* Secondary Events Grid - Flex layout forces items to stretch and fill all space */}
+            <div className="lg:col-span-4 flex flex-col gap-4 lg:gap-6 h-full">
               {secondaryEvents.map((ev, idx) => (
                 <motion.div
                   key={ev.id}
                   initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: idx * 0.2 }}
-                  className="group relative flex-1 rounded-[2rem] overflow-hidden cursor-pointer border border-white/5 bg-white/5 hover:bg-white/10 transition-colors duration-300"
+                  // flex-1 forces the cards to perfectly fill the empty vertical space without gaps
+                  className="group relative flex-1 flex flex-col rounded-[2rem] overflow-hidden cursor-pointer border border-white/5 bg-white/5 hover:bg-white/10 transition-colors duration-300 min-h-[200px]"
                 >
-                  {ev.hasImage ? (
-                    <div className="h-40 relative overflow-hidden">
-                      <img src={ev.img} alt={ev.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
-                      {ev.category && (
-                        <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-gold/20 border border-gold/30 text-gold text-[10px] font-black uppercase">
-                          {ev.category}
-                        </span>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="h-20 bg-gradient-to-r from-gold/10 to-transparent border-b border-white/5 relative">
-                      {ev.category && (
-                        <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-[10px] font-black uppercase">
-                          {ev.category}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  <div className={`p-6 relative z-10 ${ev.hasImage ? '-mt-8' : ''}`}>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-gold-light transition-colors">{ev.title}</h3>
+                  <div className="h-32 lg:h-[45%] relative overflow-hidden shrink-0 bg-background-dark/50">
+                    {/* FIXED: Added onError fallback for broken secondary images too */}
+                    <img
+                      src={(ev.hasImage && ev.img) ? ev.img : PLACEHOLDER_IMG}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = PLACEHOLDER_IMG;
+                      }}
+                      alt={ev.title}
+                      className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity group-hover:scale-105 duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#140a24] to-transparent"></div>
+                    {ev.category && (
+                      <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-gold/90 text-royal-purple-dark text-[10px] font-black uppercase shadow-md">
+                        {ev.category}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Content area flexes to fill the rest of the bottom space */}
+                  <div className="p-5 lg:p-6 relative z-10 flex-1 flex flex-col justify-end -mt-8 bg-gradient-to-b from-transparent via-[#140a24]/90 to-[#140a24]">
+                    <h3 className="text-lg lg:text-xl font-bold text-white mb-2 group-hover:text-gold-light transition-colors line-clamp-1">{ev.title}</h3>
                     <p className="text-gray-400 text-xs font-light line-clamp-2 mb-4">{ev.desc}</p>
 
-                    <div className="flex flex-col gap-1 text-[11px] font-bold">
+                    <div className="flex flex-col gap-1.5 text-[10px] lg:text-[11px] font-bold mt-auto">
                       <span className="text-gold tracking-widest flex items-center gap-2">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        {ev.startFull}
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span className="truncate">{ev.startFull}</span>
                       </span>
-                      <span className="text-gray-500 flex items-center gap-2">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        {ev.location}
+                      <span className="text-gray-400 flex items-center gap-2">
+                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        <span className="truncate">{ev.location}</span>
                       </span>
                     </div>
                   </div>
@@ -165,24 +167,24 @@ export const Events: React.FC = memo(() => {
                   key={ann.id}
                   className="group flex items-center justify-between p-4 -mx-4 rounded-xl hover:bg-white/5 transition-all duration-300 cursor-pointer"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-4 overflow-hidden">
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-gold group-hover:border-gold transition-all duration-400 group-hover:shadow-[0_0_20px_rgba(239,191,4,0.25)] group-hover:-translate-y-1">
                       <svg className="w-5 h-5 text-gold group-hover:text-royal-purple-dark transition-colors duration-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <div>
-                      <h4 className="text-lg font-bold text-white group-hover:text-gold transition-colors">{ann.title}</h4>
+                    <div className="min-w-0">
+                      <h4 className="text-lg font-bold text-white group-hover:text-gold transition-colors truncate">{ann.title}</h4>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="px-2 py-0.5 rounded bg-white/10 text-gold text-[10px] font-bold uppercase tracking-wider">{ann.tag}</span>
-                        <p className="text-sm text-gray-400 font-light flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span className="px-2 py-0.5 rounded bg-white/10 text-gold text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">{ann.tag}</span>
+                        <p className="text-sm text-gray-400 font-light flex items-center gap-1 truncate">
+                          <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                           {ann.date}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <svg className="w-5 h-5 text-gray-500 group-hover:text-gold transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                  <svg className="w-5 h-5 text-gray-500 group-hover:text-gold transform group-hover:translate-x-1 transition-all shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                 </div>
               ))}
             </div>

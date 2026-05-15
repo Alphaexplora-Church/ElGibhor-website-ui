@@ -27,20 +27,20 @@ export const ServiceSchedule: React.FC = memo(() => {
             <div className="absolute top-0 right-0 w-32 h-32 bg-royal-purple/30 rounded-bl-[100px] pointer-events-none transition-transform group-hover:scale-110 duration-500"></div>
             <h3 className="text-3xl font-bold text-white mb-8 border-b border-white/10 pb-4">Service Times</h3>
             <div className="space-y-6">
-              <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl">
-                <span className="text-xl font-bold text-gray-200">First Service</span>
+              <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
+                <span className="text-xl font-bold text-white">First Service</span>
                 <span className="text-gold font-black text-xl tracking-wider">10:00 AM</span>
               </div>
               <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
                 <span className="text-xl font-bold text-white">Second Service</span>
                 <span className="text-gold font-black text-xl tracking-wider">2:00 PM</span>
               </div>
-              <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl">
-                <span className="text-xl font-bold text-gray-200">Third Service</span>
+              <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
+                <span className="text-xl font-bold text-white">Third Service</span>
                 <span className="text-gold font-black text-xl tracking-wider">4:00 PM</span>
               </div>
             </div>
-            <p className="mt-8 text-gray-400 font-light italic">All services are approximately 90 minutes long.</p>
+            <p className="mt-8 text-gray-400 font-light italic">All services are approximately three to four hours long.</p>
           </motion.div>
 
           {/* Location Card */}
@@ -71,7 +71,7 @@ export const ServiceSchedule: React.FC = memo(() => {
                 Marikina City</h3>
               <p className="text-gray-300 mb-6 font-light">Dela Paz Street, Santo Nino, Marikina City</p>
 
-              <a href="https://maps.app.goo.gl/VZfkTTScj4NycQKZA" className="w-full sm:w-auto px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl inline-block text-center">
+              <a href="https://maps.app.goo.gl/VZfkTTScj4NycQKZA" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl inline-block text-center">
                 Get Directions
               </a>
             </div>

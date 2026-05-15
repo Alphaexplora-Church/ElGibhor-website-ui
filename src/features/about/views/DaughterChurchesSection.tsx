@@ -46,8 +46,8 @@ export const DaughterChurchesSection: React.FC = memo(() => {
       </AnimatePresence>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8 gap-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 border-b border-white/10 pb-8 gap-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center md:text-left">
             <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Daughter <span className="text-gold">Churches</span></h2>
             <p className="text-gray-500 mt-2 text-sm max-w-md font-light">Spreading the word of God. Find a TMGAN congregation near you.</p>
           </motion.div>

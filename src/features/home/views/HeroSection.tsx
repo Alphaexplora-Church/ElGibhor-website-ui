@@ -63,7 +63,7 @@ export const HeroSection: React.FC = () => {
             Explore Ministries
           </Link>
           <Link
-            to="/connect"
+            to="/experience#schedule"
             className="px-10 py-4 bg-white/10 border border-white/20 hover:bg-white/20 text-white font-bold rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md"
           >
             Service Schedule

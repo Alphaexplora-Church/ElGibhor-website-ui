@@ -13,7 +13,10 @@ export const ScrollManager = () => {
                 const element = document.getElementById(hash.replace('#', ''));
                 if (element) {
                     clearInterval(scrollInterval);
-                    element.scrollIntoView({ behavior: 'smooth' });
+                    // Offset by navbar height so the section header isn't hidden behind it
+                    const navbarOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: elementPosition - navbarOffset, behavior: 'smooth' });
                 }
                 attempts++;
                 if (attempts >= 20) {
