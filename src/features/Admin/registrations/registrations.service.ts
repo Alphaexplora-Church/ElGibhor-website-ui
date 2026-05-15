@@ -31,9 +31,9 @@ export const RegistrationsService = {
       const json = await response.json();
       // Handle both { data: [...] } and [...] response formats
       const data = (json.data ?? json) as Registration[];
-      
+
       // Ensure data is sorted by submitted_at descending
-      return data.sort((a, b) => 
+      return data.sort((a, b) =>
         new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime()
       );
     } catch (error) {

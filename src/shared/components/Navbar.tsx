@@ -3,7 +3,7 @@ import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-
 import { Link } from 'react-router-dom';
 
 // Assuming this component exists in your project
-import { PlanVisitModal } from './PlanVisitModal';
+import { PlanVisitModal } from './planVisit';
 
 const navData = [
   { name: 'Home', path: '/' },

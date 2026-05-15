@@ -236,9 +236,9 @@ export default function AdminRegistrations() {
                     {/* Visitor Status */}
                     <div className="col-span-1">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
-                        visitorStatusColors[reg.visitor_status.toLowerCase()] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                        visitorStatusColors[reg.visitor_status?.toLowerCase() ?? ''] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
                       }`}>
-                        {reg.visitor_status}
+                        {reg.visitor_status ?? 'Unknown'}
                       </span>
                     </div>
 
@@ -298,9 +298,9 @@ export default function AdminRegistrations() {
                       <div className="bg-white/5 rounded-lg p-2">
                         <p className="text-gray-500">Status</p>
                         <p className={`font-semibold ${
-                          reg.visitor_status.toLowerCase() === 'member' ? 'text-gold' : 'text-blue-400'
+                          reg.visitor_status?.toLowerCase() === 'member' ? 'text-gold' : 'text-blue-400'
                         }`}>
-                          {reg.visitor_status}
+                          {reg.visitor_status ?? 'Unknown'}
                         </p>
                       </div>
                     </div>

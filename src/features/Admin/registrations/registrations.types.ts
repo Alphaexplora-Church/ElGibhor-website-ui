@@ -8,10 +8,10 @@ export interface Registration {
   last_name: string;
   email: string;
   service_type: string;
-  adult_count: number;
-  child_count: number;
-  visitor_status: string;
-  submitted_at: string; // ISO 8601 timestamp
+  adult_count: number | null;    // INT — optional in DB
+  child_count: number | null;    // INT — optional in DB
+  visitor_status: string | null; // VARCHAR(20) — optional in DB
+  submitted_at: string;          // TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 }
 
 /**
