@@ -55,20 +55,21 @@ export const AdminEventsService = {
         if (data.location) formData.append('location', data.location);
         if (data.category_content) formData.append('category_content', data.category_content);
 
-        // Only send start_date if the user actually filled it in
+        // Combine date + time into a single ISO string (e.g. "2025-06-15T10:00")
+        // The backend passes this straight through via `payload.start_date || null`
         if (data.start_date_date) {
-            formData.append('start_date', JSON.stringify({
-                date: data.start_date_date,
-                time: data.start_date_time,
-            }));
+            const startDate = data.start_date_time
+                ? `${data.start_date_date}T${data.start_date_time}`
+                : data.start_date_date;
+            formData.append('start_date', startDate);
         }
 
         // end_date is optional
         if (data.end_date_date) {
-            formData.append('end_date', JSON.stringify({
-                date: data.end_date_date,
-                time: data.end_date_time,
-            }));
+            const endDate = data.end_date_time
+                ? `${data.end_date_date}T${data.end_date_time}`
+                : data.end_date_date;
+            formData.append('end_date', endDate);
         }
 
         // Attach the image file if provided
