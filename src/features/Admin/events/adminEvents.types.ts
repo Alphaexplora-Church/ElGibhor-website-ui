@@ -49,10 +49,8 @@ export interface EventFormData {
     category_content: string;
     start_date_date: string;
     start_date_time: string;
-    start_date_day: string;
     end_date_date: string;
     end_date_time: string;
-    end_date_day: string;
 }
 
 export const EMPTY_FORM: EventFormData = {
@@ -62,8 +60,6 @@ export const EMPTY_FORM: EventFormData = {
     category_content: '',
     start_date_date: '',
     start_date_time: '',
-    start_date_day: '',
     end_date_date: '',
     end_date_time: '',
-    end_date_day: '',
 };

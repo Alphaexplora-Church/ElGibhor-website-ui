@@ -1,6 +1,6 @@
 // src/features/Admin/events/EventModal.tsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { EventFormData } from './adminEvents.types';
 import { EMPTY_FORM } from './adminEvents.types';
 
@@ -8,20 +8,40 @@ interface EventModalProps {
     open: boolean;
     initial?: EventFormData;
     onClose: () => void;
-    onSave: (data: EventFormData) => void;
+    /** Receives the form data AND the selected image file (if any) */
+    onSave: (data: EventFormData, imageFile?: File) => void;
 }
 
 export function EventModal({ open, initial, onClose, onSave }: EventModalProps) {
     const [form, setForm] = useState<EventFormData>(initial ?? EMPTY_FORM);
+    const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         setForm(initial ?? EMPTY_FORM);
+        // Reset image state when modal opens/closes
+        setImageFile(undefined);
+        setImagePreview(null);
     }, [initial, open]);
 
     if (!open) return null;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
+    };
+
+    const clearImage = () => {
+        setImageFile(undefined);
+        setImagePreview(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
     return (
@@ -99,20 +119,49 @@ export function EventModal({ open, initial, onClose, onSave }: EventModalProps) 
                         <div className="space-y-4">
                             <h3 className="text-gold text-xs font-bold uppercase tracking-widest border-b border-white/10 pb-2">Start Date</h3>
                             <input type="date" name="start_date_date" value={form.start_date_date} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
-                            <div className="grid grid-cols-2 gap-2">
-                                <input type="time" name="start_date_time" value={form.start_date_time} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
-                                <input type="text" name="start_date_day" value={form.start_date_day} onChange={handleChange} placeholder="Day (e.g. Sun)" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
-                            </div>
+                            <input type="time" name="start_date_time" value={form.start_date_time} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
                         </div>
 
                         <div className="space-y-4">
                             <h3 className="text-gold text-xs font-bold uppercase tracking-widest border-b border-white/10 pb-2">End Date (Optional)</h3>
                             <input type="date" name="end_date_date" value={form.end_date_date} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
-                            <div className="grid grid-cols-2 gap-2">
-                                <input type="time" name="end_date_time" value={form.end_date_time} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
-                                <input type="text" name="end_date_day" value={form.end_date_day} onChange={handleChange} placeholder="Day (e.g. Mon)" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
-                            </div>
+                            <input type="time" name="end_date_time" value={form.end_date_time} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-gold outline-none" />
                         </div>
+                    </div>
+
+                    {/* Image Upload */}
+                    <div className="space-y-3">
+                        <h3 className="text-gold text-xs font-bold uppercase tracking-widest border-b border-white/10 pb-2">Cover Image (Optional)</h3>
+
+                        {imagePreview ? (
+                            <div className="relative rounded-xl overflow-hidden border border-white/10">
+                                <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={clearImage}
+                                    className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white text-xs hover:bg-red-600 transition-all"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="w-full border-2 border-dashed border-white/10 rounded-xl py-8 flex flex-col items-center gap-2 text-gray-500 hover:border-gold hover:text-gold transition-all"
+                            >
+                                <span className="text-2xl">📷</span>
+                                <span className="text-xs font-bold uppercase tracking-wider">Click to upload image</span>
+                            </button>
+                        )}
+
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="hidden"
+                        />
                     </div>
 
                 </div>
@@ -126,7 +175,7 @@ export function EventModal({ open, initial, onClose, onSave }: EventModalProps) 
                         Cancel
                     </button>
                     <button
-                        onClick={() => onSave(form)}
+                        onClick={() => onSave(form, imageFile)}
                         className="px-6 py-2.5 rounded-xl text-sm font-black bg-gold text-royal-purple-dark hover:bg-gold-light hover:scale-105 transition-all shadow-[0_0_20px_rgba(239,191,4,0.3)]"
                     >
                         {initial ? 'Save Changes' : 'Create Content'}

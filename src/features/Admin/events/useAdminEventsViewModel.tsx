@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// IMPORTANT: Update this import path to wherever your ChurchEvent/Announcement types live in your TMGAN repo!
-import type { ChurchEvent, Announcement } from '../../Experience/events/events.types';
-import type { ContentTab, EventFormData } from './adminEvents.types';
+// ChurchEvent and Announcement are sourced from the local admin types — they include
+// description, category_content, and media which the public experience types lack.
+import type { ChurchEvent, Announcement, ContentTab, EventFormData } from './adminEvents.types';
 import { AdminEventsService } from './adminEvents.service';
 
 export interface AdminEventsViewModel {
