@@ -23,6 +23,7 @@ const Ministry = lazy(() => import('./features/ministries/views/Ministry').then(
 const Login = lazy(() => import('./features/Admin/Login'));
 const AdminDashboard = lazy(() => import('./features/Admin/AdminDashboard'));
 const AdminEvents = lazy(() => import('./features/Admin/AdminEvents'));
+const AdminRegistrations = lazy(() => import('./features/Admin/registrations/AdminRegistrations'));
 
 // A lightweight fallback spinner
 const PageLoader = () => (
@@ -55,6 +56,7 @@ const AnimatedRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/events" element={<AdminEvents />} />
+        <Route path="/admin/registration" element={<AdminRegistrations />} />
       </Routes>
     </AnimatePresence>
   );
