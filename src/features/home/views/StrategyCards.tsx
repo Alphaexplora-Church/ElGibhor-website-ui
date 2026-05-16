@@ -33,7 +33,12 @@ const strategies = [
   }
 ];
 
-export const StrategyCards: React.FC = memo(() => {
+// Nagdagdag tayo ng interface para tanggapin ang prop
+interface StrategyCardsProps {
+  onOpenVisitModal: () => void;
+}
+
+export const StrategyCards: React.FC<StrategyCardsProps> = memo(({ onOpenVisitModal }) => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const navigate = useNavigate();
 
@@ -43,10 +48,7 @@ export const StrategyCards: React.FC = memo(() => {
     switch (id) {
       case "01":
         // Step 1: Open the Plan Visit Modal
-        // Assuming we will pass onOpenVisitModal as prop or handle it via a global state/context if not available.
-        // For now, if we don't have it, let's just log or route to a visit page.
-        // I will route to /experience#visit for now if onOpenVisitModal is not passed. 
-        // Or wait, the prompt says `onOpenVisitModal()` so we need to add that prop. Let's add it to the interface.
+        onOpenVisitModal();
         break;
       case "02":
         // Step 2: Route to Ministries
@@ -96,7 +98,7 @@ export const StrategyCards: React.FC = memo(() => {
             Your Next <span className="text-transparent bg-clip-text bg-gradient-to-r from-royal-purple to-royal-purple-dark italic pr-2">Steps</span>
           </motion.h2>
 
-          {/* --- NEW: Dynamic Interaction Instructions (Light Theme) --- */}
+          {/* --- Dynamic Interaction Instructions --- */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -197,4 +199,4 @@ export const StrategyCards: React.FC = memo(() => {
   );
 });
 
-StrategyCards.displayName = "StrategyCards";
+StrategyCards.displayName = "StrategyCards";

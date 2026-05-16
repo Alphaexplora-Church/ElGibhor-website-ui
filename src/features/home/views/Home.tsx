@@ -16,7 +16,7 @@ export const Home: React.FC = memo(() => {
     <div className="bg-transparent flex flex-col w-full relative z-10 overflow-hidden">
       <HeroSection />
       <WelcomeGrid />
-      <StrategyCards />
+      <StrategyCards onOpenVisitModal={() => setIsPlanVisitOpen(true)} />
       <WelcomeVideo />
       <WhatToExpect />
 
