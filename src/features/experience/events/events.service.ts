@@ -5,14 +5,14 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const EventsService = {
     fetchEvents: async (): Promise<ChurchEvent[]> => {
-        const response = await fetch(`${API_BASE_URL}/api/contents/public/events/2`);
+        const response = await fetch(`${API_BASE_URL}/api/contents/public/events/1`);
         if (!response.ok) throw new Error('Failed to fetch events');
         const json = await response.json();
         return (json.data ?? json) as ChurchEvent[];
     },
 
     fetchAnnouncements: async (): Promise<Announcement[]> => {
-        const response = await fetch(`${API_BASE_URL}/api/contents/public/announcements/2`);
+        const response = await fetch(`${API_BASE_URL}/api/contents/public/announcements/1`);
         if (!response.ok) throw new Error('Failed to fetch announcements');
         const json = await response.json();
         return (json.data ?? json) as Announcement[];
