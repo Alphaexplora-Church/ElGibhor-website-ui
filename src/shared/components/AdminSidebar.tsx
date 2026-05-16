@@ -36,7 +36,7 @@ export default function AdminSidebar() {
             {/* Logo Area */}
             <div className="p-8 border-b border-white/5">
                 <h2 className="text-2xl font-black tracking-tighter text-white">
-                    TMGAN <span className="text-gold">Admin</span>
+                    TMGN <span className="text-gold">Admin</span>
                 </h2>
             </div>
 

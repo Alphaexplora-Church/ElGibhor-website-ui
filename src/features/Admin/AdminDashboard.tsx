@@ -36,7 +36,7 @@ export default function AdminDashboard() {
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-bl-full pointer-events-none"></div>
                         <h2 className="text-2xl font-bold text-white mb-4">Welcome back!</h2>
                         <p className="text-gray-400 font-light max-w-2xl leading-relaxed">
-                            You are now logged into the TMGAN Admin Portal. Use the sidebar to navigate to the Events & Announcements manager where you can create, update, and remove content for the main website.
+                            You are now logged into the TMGN Admin Portal. Use the sidebar to navigate to the Events & Announcements manager where you can create, update, and remove content for the main website.
                         </p>
                     </div>
                 </main>

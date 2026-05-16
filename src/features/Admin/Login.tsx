@@ -15,7 +15,7 @@ export default function Login() {
         setError('');
 
         // 🛑 TEMPORARY BYPASS FOR UI TESTING 🛑
-        if (email === 'admin@tmgan.com' && password === 'admin123') {
+        if (email === 'admin@tmgn.com' && password === 'admin123') {
             // Set a fake token so the dashboard doesn't kick us out
             localStorage.setItem('token', 'mock-temporary-token');
             navigate('/admin/dashboard');
@@ -56,7 +56,7 @@ export default function Login() {
                 <h2 className="text-3xl font-black text-white mb-2 text-center tracking-tight">
                     Admin <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-gold">Portal</span>
                 </h2>
-                <p className="text-gray-400 text-center text-sm font-light mb-8">Sign in to manage TMGAN content.</p>
+                <p className="text-gray-400 text-center text-sm font-light mb-8">Sign in to manage TMGN content.</p>
 
                 {error && (
                     <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold text-center py-3 rounded-xl mb-6 backdrop-blur-md">

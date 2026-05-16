@@ -6,19 +6,19 @@ const regions = [
     id: "luzon",
     title: "Luzon",
     image: "https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?w=1200&q=80",
-    churches: ["TMGAN Manila", "TMGAN Baguio", "TMGAN Quezon City", "TMGAN Makati"]
+    churches: ["TMGN Manila", "TMGN Baguio", "TMGN Quezon City", "TMGN Makati"]
   },
   {
     id: "visayas",
     title: "Visayas",
     image: "https://images.unsplash.com/photo-1510414167123-5e917d598687?w=1200&q=80",
-    churches: ["TMGAN Cebu", "TMGAN Iloilo", "TMGAN Bacolod"]
+    churches: ["TMGN Cebu", "TMGN Iloilo", "TMGN Bacolod"]
   },
   {
     id: "mindanao",
     title: "Mindanao",
     image: "https://images.unsplash.com/photo-1542289659-cd91d6ebfaed?w=1200&q=80",
-    churches: ["TMGAN Davao", "TMGAN Cagayan de Oro", "TMGAN General Santos"]
+    churches: ["TMGN Davao", "TMGN Cagayan de Oro", "TMGN General Santos"]
   }
 ];
 
@@ -49,7 +49,7 @@ export const DaughterChurchesSection: React.FC = memo(() => {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 border-b border-white/10 pb-8 gap-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center md:text-left">
             <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Daughter <span className="text-gold">Churches</span></h2>
-            <p className="text-gray-500 mt-2 text-sm max-w-md font-light">Spreading the word of God. Find a TMGAN congregation near you.</p>
+            <p className="text-gray-500 mt-2 text-sm max-w-md font-light">Spreading the word of God. Find a TMGN congregation near you.</p>
           </motion.div>
 
           {/* Tabs */}
@@ -121,9 +121,9 @@ export const DaughterChurchesSection: React.FC = memo(() => {
         <div id="contact" className="mt-12 pt-8 border-t border-white/10 text-center flex flex-col items-center">
           <h3 className="text-2xl font-bold text-white mb-6">Need to reach a specific department?</h3>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="mailto:leadership@tmgan.org" className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 hover:text-gold transition-colors shadow-sm">leadership@tmgan.org</a>
-            <a href="mailto:membership@tmgan.org" className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 hover:text-gold transition-colors shadow-sm">membership@tmgan.org</a>
-            <a href="mailto:ministries@tmgan.org" className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 hover:text-gold transition-colors shadow-sm">ministries@tmgan.org</a>
+            <a href="mailto:leadership@tmgn.org" className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 hover:text-gold transition-colors shadow-sm">leadership@tmgn.org</a>
+            <a href="mailto:membership@tmgn.org" className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 hover:text-gold transition-colors shadow-sm">membership@tmgn.org</a>
+            <a href="mailto:ministries@tmgn.org" className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 hover:text-gold transition-colors shadow-sm">ministries@tmgn.org</a>
           </div>
         </div>
       </div>

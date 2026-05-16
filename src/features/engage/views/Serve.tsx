@@ -163,7 +163,7 @@ export const Serve: React.FC = () => {
                   transition={{ delay: idx === currentIndex ? 0.5 : 0, duration: 0.6 }}
                 >
                   <button
-                    onClick={() => window.open(`https://m.me/TMGANcommunity?ref=${team.id}`, '_blank')}
+                    onClick={() => window.open(`https://m.me/TMGNcommunity?ref=${team.id}`, '_blank')}
                     className="inline-flex items-center justify-center w-full md:w-auto px-8 sm:px-10 py-4 bg-gradient-to-r from-gold to-gold-light text-royal-purple-dark font-black text-xs sm:text-sm uppercase tracking-[0.2em] rounded-full shadow-[0_10px_30px_rgba(239,191,4,0.2)] hover:shadow-[0_10px_40px_rgba(239,191,4,0.4)] hover:-translate-y-1 active:scale-95 transition-all duration-300"
                   >
                     Join Team

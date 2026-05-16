@@ -1,8 +1,36 @@
 import React, { useState, useEffect, memo } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
+// Define data structures for the modal content
+const modalData = {
+  church: {
+    title: "Church Tithing & Offering",
+    description: "Scan to open the official El Gibhor Church giving form.",
+    qrSrc: "/EGC-QR.png",
+    link: "https://forms.gle/xPnaKpS5UiZY6h389",
+    color: "from-gold to-gold-light",
+    steps: [
+      "Scan QR or open form to provide your contact details.",
+      "Select donation type (Tithes/Offering) and your preferred Bank/E-Wallet.",
+      "Transfer exact amount to the provided channels and upload your screenshot in the form."
+    ]
+  },
+  coffee: {
+    title: "Fuel the AlphaExplora Team",
+    description: "Scan to support the developers behind the TMGN digital experience.",
+    qrSrc: "/ALPHA-QR.png",
+    link: "https://forms.gle/NxPUnynYgTjnqFEcA",
+    color: "from-purple-500 to-purple-600",
+    steps: [
+      "Scan QR to open the AlphaExplora support form.",
+      "Fill in your name, contact, and preferred Bank/E-Wallet channel.",
+      "Complete the transfer and upload a screenshot of your receipt in the form."
+    ]
+  }
+};
+
 export const Give: React.FC = memo(() => {
-  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [activeModal, setActiveModal] = useState<'church' | 'coffee' | null>(null);
   const [expandedCard, setExpandedCard] = useState<'church' | 'coffee'>('church');
 
   const { scrollY } = useScroll();
@@ -28,6 +56,8 @@ export const Give: React.FC = memo(() => {
       transition: { delay: i * 0.15, duration: 0.8, ease: [0.19, 1, 0.22, 1] },
     }),
   };
+
+  const currentModalContent = activeModal ? modalData[activeModal] : null;
 
   return (
     <div className="bg-[#0C0515] min-h-screen flex flex-col w-full relative overflow-hidden">
@@ -98,7 +128,7 @@ export const Give: React.FC = memo(() => {
               <div className="relative h-full flex flex-col">
                 <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${expandedCard === 'church' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
                   <img
-                    src="/assets/Photos/church_mission.png" alt="Mission activities"
+                    src="/assets/Photos/SampleImg3.jpg" alt="Mission activities"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11081f] via-[#11081f]/70 to-transparent" />
@@ -121,7 +151,7 @@ export const Give: React.FC = memo(() => {
                       </h3>
                       <div className={`hidden lg:flex items-center gap-2 transition-opacity duration-500 ${expandedCard === 'church' ? 'opacity-100' : 'opacity-0'}`}>
                         <div className="h-[2px] w-8 bg-gradient-to-r from-gold to-transparent" />
-                        <p className="text-gold font-black uppercase tracking-[0.2em] text-[10px]">Direct to TMGAN Church</p>
+                        <p className="text-gold font-black uppercase tracking-[0.2em] text-[10px]">Direct to TMGN Church</p>
                       </div>
                     </div>
                   </div>
@@ -167,7 +197,7 @@ export const Give: React.FC = memo(() => {
                 <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${expandedCard === 'coffee' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
                   <motion.img
                     whileHover={{ scale: 1.05 }} transition={{ duration: 0.7 }}
-                    src="/assets/Photos/tech_team.png" alt="Tech team"
+                    src="https://res.cloudinary.com/dlk93aehl/image/upload/f_auto,q_auto,w_1920,c_scale/v1775011709/alpha3.jpg" alt="Tech team"
                     className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11081f] via-[#11081f]/80 to-transparent" />
@@ -197,7 +227,7 @@ export const Give: React.FC = memo(() => {
 
                   <div className={`overflow-hidden transition-all duration-700 shrink-0 ${expandedCard === 'coffee' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
                     <p className="text-gray-300 font-light leading-relaxed text-xs sm:text-sm lg:text-base max-w-md">
-                      Support the developers and creators behind the TMGAN digital experience. Keep the servers running and the code flowing.
+                      Support the developers and creators behind the TMGN digital experience. Keep the servers running and the code flowing.
                     </p>
                   </div>
 
@@ -246,7 +276,7 @@ export const Give: React.FC = memo(() => {
 
       {/* ── Fixed Overlay QR Modal ── */}
       <AnimatePresence>
-        {activeModal && (
+        {activeModal && currentModalContent && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -270,31 +300,52 @@ export const Give: React.FC = memo(() => {
               </button>
               <div className="p-6 sm:p-8 md:p-12">
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl sm:text-3xl font-black text-white mb-2">Complete Your Donation</h3>
-                  <p className="text-gray-400 text-xs sm:text-sm">Scan the QR code using your banking or e-wallet app</p>
+                  <h3 className={`text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r ${currentModalContent.color} mb-2`}>
+                    {currentModalContent.title}
+                  </h3>
+                  <p className="text-gray-400 text-xs sm:text-sm font-light px-4">
+                    {currentModalContent.description}
+                  </p>
                 </div>
-                <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto bg-white p-4 rounded-3xl shadow-2xl mb-8 flex items-center justify-center">
-                  <svg className="w-40 h-40 text-royal-purple-dark opacity-20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 0h2v2h-2v-2z" />
-                  </svg>
-                  <span className="absolute text-[9px] font-black uppercase text-royal-purple-dark opacity-40 mt-2">Sample QR Code</span>
+
+                {/* ── ACTUAL QR CODE IMAGE ── */}
+                <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto bg-white p-3 rounded-3xl shadow-2xl mb-4 flex items-center justify-center overflow-hidden border-4 border-gold/30">
+                  <img
+                    src={currentModalContent.qrSrc}
+                    alt={`${currentModalContent.title} QR Code`}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
+
+                {/* ── FALLBACK LINK ── */}
+                <div className="text-center mb-8 space-y-2">
+                  <span className="block text-[10px] font-bold uppercase text-gold tracking-widest opacity-70">
+                    Scan to Open Form
+                  </span>
+                  <a
+                    href={currentModalContent.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block text-xs sm:text-sm text-gray-400 hover:text-white underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all duration-300"
+                  >
+                    Can't scan the QR? Click this link
+                  </a>
+                </div>
+
+                {/* ── Summarized Steps ── */}
                 <div className="space-y-3 mb-8">
-                  {[
-                    { num: 1, text: "Screenshot or download this QR code to your gallery" },
-                    { num: 2, text: "Open your banking app (BDO, BPI, GCash, etc.) and select 'Scan QR'" },
-                    { num: 3, text: "Upload the screenshot and confirm the amount to finish" }
-                  ].map((step) => (
-                    <div key={step.num} className="flex gap-4 items-center bg-white/5 p-4 rounded-xl border border-white/5">
-                      <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-royal-purple-dark font-black text-sm shrink-0">
-                        {step.num}
+                  {currentModalContent.steps.map((text, index) => (
+                    <div key={index} className="flex gap-4 items-center bg-white/5 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+                      <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${currentModalContent.color} flex items-center justify-center text-royal-purple-dark font-black text-sm shrink-0 shadow-lg`}>
+                        {index + 1}
                       </div>
-                      <p className="text-gray-300 text-xs sm:text-sm">{step.text}</p>
+                      <p className="text-gray-300 text-xs sm:text-sm font-light leading-relaxed">{text}</p>
                     </div>
                   ))}
                 </div>
-                <button onClick={() => setActiveModal(null)} className="w-full py-4 bg-white/10 text-white font-bold rounded-xl uppercase tracking-widest text-xs sm:text-sm hover:bg-white/20 transition-all">
-                  Done
+
+                <button onClick={() => setActiveModal(null)} className={`w-full py-4 bg-gradient-to-r ${currentModalContent.color} text-royal-purple-dark font-black rounded-xl uppercase tracking-widest text-xs sm:text-sm hover:brightness-110 transition-all shadow-lg`}>
+                  I have sent my generosity seed
                 </button>
               </div>
             </motion.div>

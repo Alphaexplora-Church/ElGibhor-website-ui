@@ -89,7 +89,7 @@ export const Watch: React.FC = memo(() => {
             </span>
             <span className="text-gray-200">{isLive ? 'Live Now' : 'Offline'}</span>
           </span>
-          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter">TMGAN <span className="text-royal-purple-light">Online</span></h1>
+          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter">TMGN <span className="text-royal-purple-light">Online</span></h1>
         </motion.div>
 
         <AnimatePresence mode="wait">

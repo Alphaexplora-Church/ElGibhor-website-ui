@@ -25,8 +25,8 @@ const navData = [
     ]
   },
   { name: 'Give', path: '/give' },
-  { 
-    name: 'Engage', 
+  {
+    name: 'Engage',
     path: '/engage',
     dropdown: [
       { title: 'Serve', sub: 'Make a Difference', path: '/engage#serve' },
@@ -71,8 +71,8 @@ export const Navbar: React.FC = () => {
     <>
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${hasScrolled || isMobileMenuOpen
-            ? 'bg-royal-purple/95 backdrop-blur-md border-b border-white/5 shadow-2xl'
-            : 'bg-transparent'
+          ? 'bg-royal-purple/95 backdrop-blur-md border-b border-white/5 shadow-2xl'
+          : 'bg-transparent'
           }`}
         onMouseLeave={handleMouseLeave}
       >
@@ -243,7 +243,7 @@ export const Navbar: React.FC = () => {
                 >
                   Plan a Visit
                 </button>
-                <Link
+                {/* <Link
                   to="/watch"
                   onClick={() => handleNavClick('/watch')}
                   className="flex items-center justify-center h-14 w-full rounded-xl bg-gold text-royal-purple font-black shadow-xl"
@@ -253,7 +253,8 @@ export const Navbar: React.FC = () => {
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
                   </span>
                   Watch Live
-                </Link>
+                </Link> 
+              */}
               </motion.div>
             </div>
           </motion.div>

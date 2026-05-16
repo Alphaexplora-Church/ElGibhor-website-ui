@@ -75,7 +75,7 @@ export const WelcomeVideo: React.FC = memo(() => {
                 Whether you've grown up in church your entire life, or this is your very first time stepping into a community of faith, we want you to know one thing: <strong className="text-white font-bold">you are welcome exactly as you are.</strong>
               </p>
               <p>
-                TMGAN wasn't built to be a museum for perfect people, but a hospital for the broken. It's a place to find authentic relationships, discover your God-given purpose, and experience a grace that changes everything.
+                TMGN wasn't built to be a museum for perfect people, but a hospital for the broken. It's a place to find authentic relationships, discover your God-given purpose, and experience a grace that changes everything.
               </p>
               <p>
                 Take a look around, plan a visit, and please don't hesitate to reach out if you have any questions. We can't wait to meet you this weekend!
