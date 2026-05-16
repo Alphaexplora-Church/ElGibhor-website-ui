@@ -1,33 +1,105 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import { Navbar } from './shared/components/Navbar';
-import { Home } from './features/home/views/Home';
-import { Ministries } from './features/ministries/views/Ministry';
-import { Services } from './features/services/views/Services';
-import { Connect } from './features/connect/views/Connect';
-import { Contact } from './features/contact/views/Contact';
-import { About } from './features/about/views/About';
 import { Footer } from './shared/components/Footer';
+import { GlobalBackground } from './shared/components/GlobalBackground';
+import { SmoothScroller } from './shared/components/SmoothScroller';
+import { ScrollManager } from './shared/components/ScrollManager';
+import { ScrollToTop } from './shared/components/ScrollToTop';
+
+// Lazy loading public route components
+const Home = lazy(() => import('./features/home/views/Home').then(m => ({ default: m.Home })));
+const AboutUs = lazy(() => import('./features/about/views/AboutUs').then(m => ({ default: m.AboutUs })));
+const Experience = lazy(() => import('./features/experience/views/Experience').then(m => ({ default: m.Experience })));
+const Give = lazy(() => import('./features/give/views/Give').then(m => ({ default: m.Give })));
+const Engage = lazy(() => import('./features/engage/views/Engage').then(m => ({ default: m.Engage })));
+const Watch = lazy(() => import('./features/watch/views/Watch').then(m => ({ default: m.Watch })));
+const PrayerWall = lazy(() => import('./features/prayer/views/PrayerWall').then(m => ({ default: m.PrayerWall })));
+const Ministry = lazy(() => import('./features/ministries/views/Ministry').then(m => ({ default: m.Ministry })));
+
+// Lazy loading placeholder components
+const AlterOne = lazy(() => import('./features/about/views/alterone').then(m => ({ default: m.AlterOne })));
+const AlterTwo = lazy(() => import('./features/about/views/altertwo').then(m => ({ default: m.AlterTwo })));
+
+// Lazy loading Admin Portal components 
+const Login = lazy(() => import('./features/Admin/Login'));
+const AdminDashboard = lazy(() => import('./features/Admin/AdminDashboard'));
+const AdminEvents = lazy(() => import('./features/Admin/AdminEvents'));
+const AdminRegistrations = lazy(() => import('./features/Admin/registrations/AdminRegistrations'));
+
+// A lightweight fallback spinner
+const PageLoader = () => (
+  <div className="flex h-[50vh] items-center justify-center">
+    <motion.div
+      animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+      transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+      className="w-12 h-12 border-t-2 border-r-2 border-gold rounded-full"
+    />
+  </div>
+);
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' })}>
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/experience" element={<Experience />} />
+        <Route path="/give" element={<Give />} />
+        <Route path="/engage" element={<Engage />} />
+        <Route path="/watch" element={<Watch />} />
+        <Route path="/prayer" element={<PrayerWall />} />
+        <Route path="/ministries" element={<Ministry />} />
+
+        {/* Placeholder/Test Routes */}
+        <Route path="/alter-one" element={<AlterOne />} />
+        <Route path="/alter-two" element={<AlterTwo />} />
+
+        {/* NEW: Admin Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/events" element={<AdminEvents />} />
+        <Route path="/admin/registration" element={<AdminRegistrations />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+// Layout wrapper to hide public Navbar/Footer on Admin pages
+const MainLayout = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname === '/login';
+
+  return (
+    <div className="font-sans antialiased text-royal-purple-dark bg-[#FAFAFA] min-h-screen flex flex-col selection:bg-gold selection:text-white overflow-x-hidden">
+      {/* Hide Background, Navbar, and Footer if on an admin route */}
+      {!isAdminRoute && <GlobalBackground />}
+      {!isAdminRoute && <Navbar />}
+
+      <main className="flex-grow w-full relative">
+        <Suspense fallback={<PageLoader />}>
+          <AnimatedRoutes />
+        </Suspense>
+      </main>
+
+      {!isAdminRoute && <Footer />}
+    </div>
+  );
+};
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="font-sans antialiased text-white bg-background-dark min-h-screen flex flex-col selection:bg-gold selection:text-black">
-        <Navbar />
-        
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/ministries" element={<Ministries />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/connect" element={<Connect />} />
-            <Route path="/plan-a-visit" element={<Contact />} />
-          </Routes>
-        </main>
-        
-        <Footer />
-      </div>
+      <SmoothScroller>
+        <ScrollToTop />
+        <ScrollManager />
+        <MainLayout />
+      </SmoothScroller>
     </BrowserRouter>
   );
 }

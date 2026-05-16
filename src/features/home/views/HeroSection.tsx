@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -7,11 +7,11 @@ export const HeroSection: React.FC = () => {
     <section id="home" className="relative min-h-[100vh] flex items-center justify-center overflow-hidden pt-20">
       {/* Video Background */}
       <div className="absolute inset-0 bg-royal-purple-dark">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-80"
         >
           {/* A classy placeholder abstract background loop (or swap with actual worship video) */}
@@ -20,14 +20,13 @@ export const HeroSection: React.FC = () => {
         {/* Overlay gradient to ensure text readability and blend with the dark purple theme */}
         <div className="absolute inset-0 bg-gradient-to-b from-royal-purple-dark/60 via-background-dark/80 to-background-dark"></div>
       </div>
-      
+
       {/* Decorative Orbs for extra blend */}
       <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-royal-purple rounded-full blur-[150px] opacity-40 animate-pulse-slow"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-gold rounded-full blur-[150px] opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-
+      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-gold rounded-full blur-[150px] opacity-10 animate-pulse-slow" style={{ animationDelay: '4s' }}></div>
       <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
         {/* Main Heading */}
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -41,7 +40,7 @@ export const HeroSection: React.FC = () => {
         </motion.h1>
 
         {/* Tagline */}
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -51,20 +50,20 @@ export const HeroSection: React.FC = () => {
         </motion.p>
 
         {/* CTA Buttons */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-12 flex flex-col sm:flex-row gap-6 justify-center"
         >
           <Link
-            to="/ministries"
+            to="/experience#ministries"
             className="px-10 py-4 bg-gradient-to-r from-gold to-gold-light hover:from-gold-light hover:to-gold text-royal-purple font-bold rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
           >
             Explore Ministries
           </Link>
           <Link
-            to="/connect"
+            to="/experience#schedule"
             className="px-10 py-4 bg-white/10 border border-white/20 hover:bg-white/20 text-white font-bold rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-md"
           >
             Service Schedule

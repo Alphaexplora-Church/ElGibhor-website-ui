@@ -3,42 +3,43 @@ import { FaFacebook, FaInstagram, FaEnvelope } from 'react-icons/fa';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-background-card border-t border-border-dark py-24 relative overflow-hidden mt-auto">
-      {/* Subtle glow effect in footer */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-gradient-to-r from-transparent via-royal-purple to-transparent opacity-50"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-royal-purple/10 rounded-full blur-[100px]"></div>
+    <footer className="bg-background-card border-t border-border-dark py-10 relative z-[1] overflow-hidden mt-auto">
+      {/* Subtle top accent line */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-royal-purple/40 to-transparent"></div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center md:items-start gap-12">
-        
+      <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center md:items-start gap-8">
+
         <div className="md:w-1/2 text-center md:text-left">
-           <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">The Mighty God of <br/>All Nations Inc.</h2>
-           <p className="text-gray-400 max-w-md mx-auto md:mx-0 leading-relaxed mb-6">
-             A movement of devoted Christ-followers dedicated to guiding others in their faith journey, all for the glory of God.
-           </p>
+          <h2 className="text-xl font-bold text-white mb-0.5 tracking-tight hover:text-gold transition-colors cursor-pointer">El Gibhor</h2>
+          <p className="text-xs font-medium text-royal-purple-light uppercase tracking-widest mb-3">The Mighty God of All Nations Inc.</p>
+          <p className="text-gray-500 text-sm max-w-xs mx-auto md:mx-0 leading-relaxed">
+            A movement of devoted Christ-followers dedicated to guiding others in their faith journey, all for the glory of God.
+          </p>
         </div>
 
-        <div className="flex flex-col items-center md:items-end space-y-6">
-          <h3 className="text-lg font-semibold text-white">Connect With Us</h3>
-          <div className="flex space-x-6">
-            <a href="https://www.facebook.com/EGCcommunity" target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-400 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all transition-colors">
-              <FaFacebook size={24} />
+        <div className="flex flex-col items-center md:items-end gap-4">
+          <h3 className="text-sm font-semibold text-white">Connect With Us</h3>
+          <div className="flex space-x-3">
+            <a href="https://www.facebook.com/TMGNcommunity" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
+              <FaFacebook size={16} />
             </a>
-            <a href="https://www.instagram.com/tmgn.inc?igsh=MTR4OHYzYXNsYXYxZA%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-400 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all transition-colors">
-              <FaInstagram size={24} />
+            <a href="https://www.instagram.com/tmgn.inc/" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
+              <FaInstagram size={16} />
             </a>
-            <a href="mailto:inc.tmgn@gmail.com" className="w-12 h-12 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-400 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all transition-colors">
-              <FaEnvelope size={24} />
+            {/* <a href="mailto:inc.tmgn@gmail.com" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
+              <FaEnvelope size={16} />
             </a>
+            */}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 border-t border-border-dark mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-400 text-sm">
-        <p>&copy; 2024 The Mighty God of All Nations Inc. All rights reserved.</p>
-        <div className="flex space-x-8 mt-4 md:mt-0">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 border-t border-border-dark mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-600">
+        <p>&copy; {new Date().getFullYear()} TMGN Inc. All rights reserved.</p>
+        <p className="italic text-gold/60">"Go and Make Disciples"</p>
+        <p>
+          Powered by <a href="https://www.alphaexplora.com/" target="_blank" rel="noreferrer" className="text-gray-500 hover:text-gold transition-colors font-semibold tracking-wide"> Alphaexplora Information Technology Services</a>
+        </p>
       </div>
     </footer>
   );

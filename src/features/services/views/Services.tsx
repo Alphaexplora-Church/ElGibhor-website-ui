@@ -18,7 +18,7 @@ export const Services: React.FC = () => {
         <div className="min-h-screen bg-background-dark overflow-x-hidden border-t border-border-dark">
             
             {/* Parallax Header */}
-            <div className="relative h-[50vh] flex items-center justify-center overflow-hidden border-b border-border-dark">
+            <div className="relative h-[40vh] flex items-center justify-center overflow-hidden border-b border-border-dark">
                <motion.div style={{ y: yHeader }} className="absolute inset-0 opacity-20 mix-blend-luminosity">
                    <img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600&q=80" alt="Worship Background" className="w-full h-full object-cover" />
                </motion.div>
@@ -26,8 +26,8 @@ export const Services: React.FC = () => {
                
                <div className="relative z-10 text-center px-6 mt-16">
                  <motion.h1 
-                    initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}
-                    className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter"
+                    initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7 }}
+                    className="text-4xl md:text-5xl font-black text-white mb-4 uppercase tracking-tight"
                  >
                     Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-gold-dark italic">Services</span>
                  </motion.h1>
@@ -35,8 +35,8 @@ export const Services: React.FC = () => {
             </div>
 
             {/* Main Service Grid */}
-            <div className="max-w-7xl mx-auto px-6 py-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="max-w-7xl mx-auto px-6 py-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {services.map((service, idx) => (
                         <motion.div
                             key={idx}
@@ -47,7 +47,7 @@ export const Services: React.FC = () => {
                             className="group rounded-2xl overflow-hidden border border-border-dark hover:border-gold/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(75,42,111,0.5)]"
                         >
                             {/* Image */}
-                            <div className="relative h-80 overflow-hidden">
+                            <div className="relative h-56 overflow-hidden">
                                 <img 
                                     src={service.img} 
                                     alt={service.name} 
