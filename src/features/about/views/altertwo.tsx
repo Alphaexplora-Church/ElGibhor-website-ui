@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 export const AlterTwo: React.FC = memo(() => {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-    // 36 pictures para sa full collage effect
-    const galleryImages = Array.from({ length: 36 }, (_, i) => {
-        return `https://picsum.photos/seed/${i + 50}/800/800`;
+    // 36 slots para sa collage gamit ang gal1 to gal20 na naka-loop
+    // OPTIMIZATION: Idinagdag ang w_600,c_limit para tipid sa Cloudinary bandwidth/credits
+    const galleryImages = Array.from({ length: 20 }, (_, i) => {
+        const imageNum = (i % 20) + 1; // Naglo-loop mula 1 hanggang 20
+        return `https://res.cloudinary.com/djben2yoo/image/upload/f_auto,q_auto,w_600,c_limit/v1778966222/gal${imageNum}.jpg`;
     });
 
     // Iba't ibang aspect ratios para magkaroon ng dynamic widths ang bawat picture
@@ -38,7 +40,7 @@ export const AlterTwo: React.FC = memo(() => {
                         <div className="flex items-center justify-center gap-4 mb-6">
                             <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold"></div>
                             <span className="text-gold font-black uppercase tracking-[0.3em] text-xs md:text-sm">
-                                Life at TMGN
+                                Life at TMGAN
                             </span>
                             <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold"></div>
                         </div>

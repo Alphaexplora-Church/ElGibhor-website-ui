@@ -194,7 +194,7 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                                                         </div>
                                                     </div>
                                                     <span className={`ml-3 text-sm transition-colors ${vm.formData.type === 'first-time' ? 'text-white font-medium' : 'text-gray-400'}`}>
-                                                        First-Time Guest
+                                                        First-Time Member
                                                     </span>
                                                 </label>
 

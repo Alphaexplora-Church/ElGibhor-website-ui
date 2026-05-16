@@ -25,13 +25,6 @@ export const Events: React.FC = memo(() => {
               Upcoming <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-gold">Events</span>
             </h2>
           </motion.div>
-          <motion.button
-            initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
-            className="hidden md:flex items-center text-gray-300 hover:text-white transition-colors group font-bold"
-          >
-            View Full Calendar
-            <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-          </motion.button>
         </div>
 
         {/* Loading / Error States */}
@@ -190,11 +183,6 @@ export const Events: React.FC = memo(() => {
             </div>
           </motion.div>
         )}
-
-        {/* Mobile View Calendar Button */}
-        <button className="md:hidden w-full mt-8 py-4 rounded-xl border border-white/20 text-white font-bold hover:bg-white/5 transition-colors flex items-center justify-center">
-          View Full Calendar
-        </button>
 
       </div>
     </section>
