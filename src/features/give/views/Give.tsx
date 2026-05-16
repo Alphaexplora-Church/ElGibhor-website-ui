@@ -1,52 +1,14 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { memo } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-
-// Define data structures for the modal content
-const modalData = {
-  church: {
-    title: "Church Tithing & Offering",
-    description: "Scan to open the official El Gibhor Church giving form.",
-    qrSrc: "/EGC-QR.png",
-    link: "https://forms.gle/xPnaKpS5UiZY6h389",
-    color: "from-gold to-gold-light",
-    steps: [
-      "Scan QR or open form to provide your contact details.",
-      "Select donation type (Tithes/Offering) and your preferred Bank/E-Wallet.",
-      "Transfer exact amount to the provided channels and upload your screenshot in the form."
-    ]
-  },
-  coffee: {
-    title: "Fuel the AlphaExplora Team",
-    description: "Scan to support the developers behind the TMGN digital experience.",
-    qrSrc: "/ALPHA-QR.png",
-    link: "https://forms.gle/NxPUnynYgTjnqFEcA",
-    color: "from-purple-500 to-purple-600",
-    steps: [
-      "Scan QR to open the AlphaExplora support form.",
-      "Fill in your name, contact, and preferred Bank/E-Wallet channel.",
-      "Complete the transfer and upload a screenshot of your receipt in the form."
-    ]
-  }
-};
+import { useGiveViewModel } from '../viewModels/useGiveViewModel';
 
 export const Give: React.FC = memo(() => {
-  const [activeModal, setActiveModal] = useState<'church' | 'coffee' | null>(null);
-  const [expandedCard, setExpandedCard] = useState<'church' | 'coffee'>('church');
+  // ViewModel
+  const viewModel = useGiveViewModel();
 
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const y2 = useTransform(scrollY, [0, 500], [0, -100]);
-
-  useEffect(() => {
-    if (activeModal) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [activeModal]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 40 },
@@ -57,7 +19,7 @@ export const Give: React.FC = memo(() => {
     }),
   };
 
-  const currentModalContent = activeModal ? modalData[activeModal] : null;
+  const currentModalContent = viewModel.getCurrentModalContent();
 
   return (
     <div className="bg-[#0C0515] min-h-screen flex flex-col w-full relative overflow-hidden">
@@ -117,16 +79,16 @@ export const Give: React.FC = memo(() => {
             {/* ── CARD 1: Support the Mission ── */}
             <motion.div
               custom={0} initial="hidden" animate="visible" variants={cardVariants}
-              onMouseEnter={() => setExpandedCard('church')}
-              onClick={() => setExpandedCard('church')}
+              onMouseEnter={() => viewModel.setCardExpanded('church')}
+              onClick={() => viewModel.setCardExpanded('church')}
               className={`relative group bg-[#11081f]/80 backdrop-blur-3xl border border-white/10 rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col hover:border-gold/40
-                ${expandedCard === 'church' ? 'lg:w-[70%]' : 'lg:w-[30%]'}
+                ${viewModel.expandedCard === 'church' ? 'lg:w-[70%]' : 'lg:w-[30%]'}
               `}
             >
               <div className="absolute -inset-[1px] bg-gradient-to-r from-gold/20 via-purple-500/20 to-gold/20 rounded-[3rem] blur-sm opacity-0 group-hover:opacity-100 transition-all duration-700" />
 
               <div className="relative h-full flex flex-col">
-                <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${expandedCard === 'church' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
+                <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${viewModel.expandedCard === 'church' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
                   <img
                     src="/assets/Photos/SampleImg3.jpg" alt="Mission activities"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -134,7 +96,7 @@ export const Give: React.FC = memo(() => {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11081f] via-[#11081f]/70 to-transparent" />
                 </div>
 
-                <div className={`relative p-6 sm:p-8 lg:p-10 pb-8 flex-grow flex flex-col transition-all duration-700 ${expandedCard === 'church' ? '-mt-12 lg:-mt-16' : 'mt-0'}`}>
+                <div className={`relative p-6 sm:p-8 lg:p-10 pb-8 flex-grow flex flex-col transition-all duration-700 ${viewModel.expandedCard === 'church' ? '-mt-12 lg:-mt-16' : 'mt-0'}`}>
 
                   <div className="flex items-center lg:items-start gap-4 lg:gap-0 lg:flex-col shrink-0">
                     <div className="relative w-12 h-12 lg:w-16 lg:h-16 shrink-0 lg:mb-6">
@@ -149,14 +111,14 @@ export const Give: React.FC = memo(() => {
                       <h3 className="text-xl sm:text-2xl lg:text-4xl font-black text-white lg:mb-2 tracking-tight">
                         Support the Mission
                       </h3>
-                      <div className={`hidden lg:flex items-center gap-2 transition-opacity duration-500 ${expandedCard === 'church' ? 'opacity-100' : 'opacity-0'}`}>
+                      <div className={`hidden lg:flex items-center gap-2 transition-opacity duration-500 ${viewModel.expandedCard === 'church' ? 'opacity-100' : 'opacity-0'}`}>
                         <div className="h-[2px] w-8 bg-gradient-to-r from-gold to-transparent" />
                         <p className="text-gold font-black uppercase tracking-[0.2em] text-[10px]">Direct to TMGN Church</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className={`overflow-hidden transition-all duration-700 shrink-0 ${expandedCard === 'church' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-700 shrink-0 ${viewModel.expandedCard === 'church' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
                     <p className="text-gray-300 font-light leading-relaxed text-xs sm:text-sm lg:text-base max-w-md">
                       Your tithes and offerings fuel our local ministries, community reach, and church operations. Every seed sown makes an eternal impact.
                     </p>
@@ -165,7 +127,7 @@ export const Give: React.FC = memo(() => {
                   <div className="mt-auto pt-6 flex flex-col justify-end">
                     <motion.button
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      onClick={(e) => { e.stopPropagation(); setActiveModal("church"); }}
+                      onClick={(e) => { e.stopPropagation(); viewModel.openModal("church"); }}
                       className="group/btn relative w-full sm:w-auto overflow-hidden rounded-2xl"
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-gold via-gold-light to-gold opacity-0 group-hover/btn:opacity-100 blur-xl transition-opacity duration-500" />
@@ -185,16 +147,16 @@ export const Give: React.FC = memo(() => {
             {/* ── CARD 2: Fuel the Tech Team ── */}
             <motion.div
               custom={1} initial="hidden" animate="visible" variants={cardVariants}
-              onMouseEnter={() => setExpandedCard('coffee')}
-              onClick={() => setExpandedCard('coffee')}
+              onMouseEnter={() => viewModel.setCardExpanded('coffee')}
+              onClick={() => viewModel.setCardExpanded('coffee')}
               className={`relative group bg-[#11081f]/80 backdrop-blur-3xl border border-white/10 rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col hover:border-purple-500/40
-                ${expandedCard === 'coffee' ? 'lg:w-[70%]' : 'lg:w-[30%]'}
+                ${viewModel.expandedCard === 'coffee' ? 'lg:w-[70%]' : 'lg:w-[30%]'}
               `}
             >
               <div className="absolute -inset-[1px] bg-gradient-to-r from-purple-500/20 via-gold/20 to-purple-500/20 rounded-[3rem] blur-sm opacity-0 group-hover:opacity-100 transition-all duration-700" />
 
               <div className="relative h-full flex flex-col">
-                <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${expandedCard === 'coffee' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
+                <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${viewModel.expandedCard === 'coffee' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
                   <motion.img
                     whileHover={{ scale: 1.05 }} transition={{ duration: 0.7 }}
                     src="https://res.cloudinary.com/dlk93aehl/image/upload/f_auto,q_auto,w_1920,c_scale/v1775011709/alpha3.jpg" alt="Tech team"
@@ -203,7 +165,7 @@ export const Give: React.FC = memo(() => {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11081f] via-[#11081f]/80 to-transparent" />
                 </div>
 
-                <div className={`relative p-6 sm:p-8 lg:p-10 pb-8 flex-grow flex flex-col transition-all duration-700 ${expandedCard === 'coffee' ? '-mt-12 lg:-mt-16' : 'mt-0'}`}>
+                <div className={`relative p-6 sm:p-8 lg:p-10 pb-8 flex-grow flex flex-col transition-all duration-700 ${viewModel.expandedCard === 'coffee' ? '-mt-12 lg:-mt-16' : 'mt-0'}`}>
 
                   <div className="flex items-center lg:items-start gap-4 lg:gap-0 lg:flex-col shrink-0">
                     <div className="relative w-12 h-12 lg:w-16 lg:h-16 shrink-0 lg:mb-6">
@@ -218,14 +180,14 @@ export const Give: React.FC = memo(() => {
                       <h3 className="text-xl sm:text-2xl lg:text-4xl font-black text-white lg:mb-2 tracking-tight whitespace-nowrap lg:whitespace-normal">
                         Fuel the Tech Team
                       </h3>
-                      <div className={`hidden lg:flex items-center gap-2 transition-opacity duration-500 ${expandedCard === 'coffee' ? 'opacity-100' : 'opacity-0'}`}>
+                      <div className={`hidden lg:flex items-center gap-2 transition-opacity duration-500 ${viewModel.expandedCard === 'coffee' ? 'opacity-100' : 'opacity-0'}`}>
                         <div className="h-[2px] w-6 bg-gradient-to-r from-purple-500 to-transparent" />
                         <p className="text-purple-400 font-black uppercase tracking-[0.2em] text-[10px]">Buy us Coffee</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className={`overflow-hidden transition-all duration-700 shrink-0 ${expandedCard === 'coffee' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
+                  <div className={`overflow-hidden transition-all duration-700 shrink-0 ${viewModel.expandedCard === 'coffee' ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
                     <p className="text-gray-300 font-light leading-relaxed text-xs sm:text-sm lg:text-base max-w-md">
                       Support the developers and creators behind the TMGN digital experience. Keep the servers running and the code flowing.
                     </p>
@@ -234,7 +196,7 @@ export const Give: React.FC = memo(() => {
                   <div className="mt-auto pt-6 flex flex-col justify-end">
                     <motion.button
                       whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      onClick={(e) => { e.stopPropagation(); setActiveModal("coffee"); }}
+                      onClick={(e) => { e.stopPropagation(); viewModel.openModal("coffee"); }}
                       className="group/btn relative w-full sm:w-auto overflow-hidden rounded-2xl"
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-purple-600 opacity-0 group-hover/btn:opacity-100 blur-xl transition-opacity duration-500" />
@@ -274,13 +236,13 @@ export const Give: React.FC = memo(() => {
         </div>
       </section>
 
-      {/* ── Fixed Overlay QR Modal ── */}
+      {/* ── Fixed Overlay Payment Form Modal ── */}
       <AnimatePresence>
-        {activeModal && currentModalContent && (
+        {viewModel.activeModal && currentModalContent && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setActiveModal(null)}
+              onClick={() => viewModel.closeModal()}
               className="absolute inset-0 bg-[#0C0515]/95 backdrop-blur-xl"
             />
             <motion.div
@@ -291,7 +253,7 @@ export const Give: React.FC = memo(() => {
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
               <button
-                onClick={() => setActiveModal(null)}
+                onClick={() => viewModel.closeModal()}
                 className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,45 +270,70 @@ export const Give: React.FC = memo(() => {
                   </p>
                 </div>
 
-                {/* ── ACTUAL QR CODE IMAGE ── */}
-                <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto bg-white p-3 rounded-3xl shadow-2xl mb-4 flex items-center justify-center overflow-hidden border-4 border-gold/30">
-                  <img
-                    src={currentModalContent.qrSrc}
-                    alt={`${currentModalContent.title} QR Code`}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-
-                {/* ── FALLBACK LINK ── */}
-                <div className="text-center mb-8 space-y-2">
-                  <span className="block text-[10px] font-bold uppercase text-gold tracking-widest opacity-70">
-                    Scan to Open Form
-                  </span>
-                  <a
-                    href={currentModalContent.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block text-xs sm:text-sm text-gray-400 hover:text-white underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all duration-300"
-                  >
-                    Can't scan the QR? Click this link
-                  </a>
-                </div>
-
-                {/* ── Summarized Steps ── */}
-                <div className="space-y-3 mb-8">
-                  {currentModalContent.steps.map((text, index) => (
-                    <div key={index} className="flex gap-4 items-center bg-white/5 p-4 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                      <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${currentModalContent.color} flex items-center justify-center text-royal-purple-dark font-black text-sm shrink-0 shadow-lg`}>
-                        {index + 1}
+                {/* ── PAYMENT FORM ── */}
+                <form onSubmit={viewModel.handleDonationSubmit} className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs sm:text-sm text-gray-400 font-light mb-2">Donation Type</label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {['Tithes', 'Offerings'].map((typeOption) => (
+                          <button
+                            key={typeOption}
+                            type="button"
+                            onClick={() => viewModel.setItemName(typeOption)}
+                            className={`py-3 rounded-xl border text-sm font-bold transition-all duration-300 ${
+                              viewModel.itemName === typeOption 
+                                ? 'border-transparent bg-gradient-to-r ' + currentModalContent.color + ' text-royal-purple-dark shadow-lg'
+                                : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/30 hover:bg-white/10'
+                            }`}
+                          >
+                            {typeOption}
+                          </button>
+                        ))}
                       </div>
-                      <p className="text-gray-300 text-xs sm:text-sm font-light leading-relaxed">{text}</p>
                     </div>
-                  ))}
-                </div>
+                    <div>
+                      <label className="block text-xs sm:text-sm text-gray-400 font-light mb-1">Description / Notes</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={viewModel.description}
+                        onChange={(e) => viewModel.setDescription(e.target.value)}
+                        placeholder="e.g. Church donation"
+                        className="w-full bg-[#11081f] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold/50 transition-colors"
+                      />
+                    </div>
 
-                <button onClick={() => setActiveModal(null)} className={`w-full py-4 bg-gradient-to-r ${currentModalContent.color} text-royal-purple-dark font-black rounded-xl uppercase tracking-widest text-xs sm:text-sm hover:brightness-110 transition-all shadow-lg`}>
-                  I have sent my generosity seed
-                </button>
+                    <div>
+                      <label className="block text-xs sm:text-sm text-gray-400 font-light mb-2">Select Amount (PHP)</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {[50, 100, 500, 1000].map((val) => (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() => viewModel.setAmount(val)}
+                            className={`py-3 rounded-xl border text-sm font-bold transition-all duration-300 ${
+                              viewModel.amount === val 
+                                ? 'border-transparent bg-gradient-to-r ' + currentModalContent.color + ' text-royal-purple-dark shadow-lg'
+                                : 'border-white/10 bg-white/5 text-gray-300 hover:border-white/30 hover:bg-white/10'
+                            }`}
+                          >
+                            ₱{val}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    disabled={viewModel.isLoading || !viewModel.isFormValid()}
+                    className={`w-full py-4 mt-8 bg-gradient-to-r ${currentModalContent.color} text-royal-purple-dark font-black rounded-xl uppercase tracking-widest text-xs sm:text-sm hover:brightness-110 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {viewModel.isLoading ? 'Processing...' : 'Proceed to Payment'}
+                  </button>
+                </form>
+
               </div>
             </motion.div>
           </div>
