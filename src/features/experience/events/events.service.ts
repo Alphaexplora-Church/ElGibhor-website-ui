@@ -1,7 +1,7 @@
 import type { ChurchEvent, Announcement } from './events.types';
 
 // Vercel Ready: Kukunin ang link sa .env, kung wala, gagamitin ang live Render link.
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://church-website-backend-3e7l.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const EventsService = {
     fetchEvents: async (): Promise<ChurchEvent[]> => {
