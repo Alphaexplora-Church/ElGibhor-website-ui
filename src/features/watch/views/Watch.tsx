@@ -9,19 +9,16 @@ function getNextStream() {
   const thisSunday = new Date(now);
   thisSunday.setDate(now.getDate() + daysUntilSunday);
 
-  const eng = new Date(thisSunday);
-  eng.setHours(10, 0, 0, 0);
-  const tag = new Date(thisSunday);
-  tag.setHours(14, 0, 0, 0);
+  const taglish = new Date(thisSunday);
+  taglish.setHours(9, 0, 0, 0);
 
-  if (now < eng) return { label: '10:00 AM — English', target: eng };
-  if (now < tag) return { label: '2:00 PM — Tagalog', target: tag };
+  if (now < taglish) return { label: '9:00 AM — Taglish', target: taglish };
 
-  // Both passed — next Sunday English
+  // Passed — next Sunday Taglish
   const nextSunday = new Date(thisSunday);
   nextSunday.setDate(thisSunday.getDate() + 7);
-  nextSunday.setHours(10, 0, 0, 0);
-  return { label: '10:00 AM — English', target: nextSunday };
+  nextSunday.setHours(9, 0, 0, 0);
+  return { label: '9:00 AM — Taglish', target: nextSunday };
 }
 
 function useCountdown(target: Date) {
@@ -41,6 +38,9 @@ function useCountdown(target: Date) {
 export const Watch: React.FC = memo(() => {
   const [isLive, setIsLive] = useState(false);
 
+  // DITO MO ILALAGAY YUNG LINK NA IBIBIGAY NI RICHARD BUKAS:
+  const FACEBOOK_LIVE_URL = "https://www.facebook.com/facebook/videos/10153231379946729/";
+
   const next = getNextStream();
   const { d, h, m, s } = useCountdown(next.target);
 
@@ -54,17 +54,14 @@ export const Watch: React.FC = memo(() => {
       const currentTime = hours * 60 + minutes; // Convert to minutes
 
       // Service times (in minutes from midnight):
-      // 10:00 AM = 600 minutes
-      // 2:00 PM = 840 minutes
-      const eng10am = 600;
-      const tag2pm = 840;
+      // 9:00 AM = 540 minutes
+      const taglish9am = 540;
       const buffer_before = 10;
       const buffer_after = 150;
 
-      const withinEng = dayOfWeek === 0 && currentTime >= (eng10am - buffer_before) && currentTime <= (eng10am + buffer_after);
-      const withinTag = dayOfWeek === 0 && currentTime >= (tag2pm - buffer_before) && currentTime <= (tag2pm + buffer_after);
+      const withinTaglish = dayOfWeek === 0 && currentTime >= (taglish9am - buffer_before) && currentTime <= (taglish9am + buffer_after);
 
-      setIsLive(withinEng || withinTag);
+      setIsLive(withinTaglish);
     };
 
     checkServiceTime();
@@ -94,7 +91,7 @@ export const Watch: React.FC = memo(() => {
 
         <AnimatePresence mode="wait">
           {isLive ? (
-            /* ── LIVE EMBED ────────────────────────────────────── */
+            /* ── LIVE EMBED (FACEBOOK) ────────────────────────────────────── */
             <motion.div
               key="player"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -105,12 +102,14 @@ export const Watch: React.FC = memo(() => {
               <div className="relative w-full rounded-3xl overflow-hidden bg-black/20 border border-white/10 shadow-2xl">
                 <div className="aspect-video">
                   <iframe
+                    src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(FACEBOOK_LIVE_URL)}&show_text=false&width=auto`}
                     width="100%"
                     height="100%"
-                    src="https://www.youtube.com/embed/live_stream?channel=UCP34NqLt4D8Zh3jPXDsdxRw&autoplay=0"
+                    style={{ border: 'none', overflow: 'hidden' }}
+                    scrolling="no"
                     frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+                    allowFullScreen={true}
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                     title="Church Live Stream"
                     className="w-full h-full"
                   ></iframe>
@@ -126,22 +125,17 @@ export const Watch: React.FC = memo(() => {
               exit={{ opacity: 0, scale: 0.9 }}
               className="w-full"
             >
-              {/* Two service buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-                {[
-                  { time: '10:00 AM', lang: 'English' },
-                  { time: '2:00 PM', lang: 'Tagalog' }
-                ].map((svc) => (
-                  <div key={svc.lang} className="flex items-center justify-between px-6 py-4 rounded-2xl border border-white/10 bg-white/[0.03]">
-                    <div>
-                      <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-gold font-bold block">{svc.lang}</span>
-                      <span className="text-2xl font-bold text-white">{svc.time} Service</span>
-                    </div>
-                    <div className="px-4 py-1.5 rounded-full border border-white/20 font-sans text-[10px] uppercase tracking-widest text-white/50 font-bold">
-                      Upcoming
-                    </div>
+              {/* Single Taglish Service Button */}
+              <div className="flex justify-center mb-12">
+                <div className="w-full max-w-md flex items-center justify-between px-6 py-4 rounded-2xl border border-white/10 bg-white/[0.03]">
+                  <div>
+                    <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-gold font-bold block">Taglish</span>
+                    <span className="text-2xl font-bold text-white">9:00 AM Service</span>
                   </div>
-                ))}
+                  <div className="px-4 py-1.5 rounded-full border border-white/20 font-sans text-[10px] uppercase tracking-widest text-white/50 font-bold">
+                    Upcoming
+                  </div>
+                </div>
               </div>
 
               {/* Countdown */}

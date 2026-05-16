@@ -6,7 +6,7 @@ const volunteerTeams = [
     id: 'guest-experience',
     title: 'Guest Experience',
     description: 'Create a welcoming atmosphere from the parking lot to the sanctuary. Help guests feel like family the moment they arrive.',
-    image: 'assets/Photos/Image1.jpg',
+    image: 'assets/Photos/Image6.jpg',
   },
   {
     id: 'radiance-youth',

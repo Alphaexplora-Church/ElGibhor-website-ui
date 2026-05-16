@@ -26,7 +26,6 @@ export const WelcomeVideo: React.FC = memo(() => {
             {/* Main Image Container */}
             <div className="relative w-full aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-white/5 backdrop-blur-sm">
               <img
-                // Placeholder image of a welcoming couple/leaders. Change URL to your real pastors!
                 src="/assets/Photos/SamplePastor.jpg"
                 alt="Church Leadership"
                 loading="lazy"
@@ -35,18 +34,6 @@ export const WelcomeVideo: React.FC = memo(() => {
               {/* Subtle inner gradient so the image isn't too flat */}
               <div className="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent"></div>
             </div>
-
-            {/* Floating Name Tag */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="absolute -bottom-6 -left-4 md:-left-8 bg-[#0C0515] border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] px-6 py-4 rounded-2xl backdrop-blur-xl"
-            >
-              <p className="text-white font-black text-lg tracking-tight">John & Jane Doe</p>
-              <p className="text-gold text-xs font-bold uppercase tracking-widest mt-1">Lead Pastors</p>
-            </motion.div>
           </motion.div>
 
 
@@ -72,13 +59,17 @@ export const WelcomeVideo: React.FC = memo(() => {
             {/* The Letter Body */}
             <div className="space-y-6 text-gray-300 text-lg md:text-xl font-light leading-relaxed">
               <p>
-                Whether you've grown up in church your entire life, or this is your very first time stepping into a community of faith, we want you to know one thing: <strong className="text-white font-bold">you are welcome exactly as you are.</strong>
+                From the moment you connect with us, we want you to feel the embrace of a family. Whether you are taking your first steps in faith or looking for a place to grow deeper, <strong className="text-white font-bold">there is a seat waiting just for you.</strong>
               </p>
               <p>
-                TMGN wasn't built to be a museum for perfect people, but a hospital for the broken. It's a place to find authentic relationships, discover your God-given purpose, and experience a grace that changes everything.
+                We are a community united by grace, driven by purpose, and passionate about seeing lives transformed. Here, you will find authentic friendships, powerful worship, and the encouragement you need for every season of life.
               </p>
+              <blockquote className="border-l-4 border-gold pl-4 italic text-white/80 my-6">
+                "Therefore welcome one another as Christ has welcomed you, for the glory of God." <br />
+                <span className="text-sm font-bold text-gold-light not-italic mt-2 block">— Romans 15:7</span>
+              </blockquote>
               <p>
-                Take a look around, plan a visit, and please don't hesitate to reach out if you have any questions. We can't wait to meet you this weekend!
+                Come as you are. We can't wait to worship with you, grow with you, and do life together!
               </p>
             </div>
 
@@ -87,7 +78,7 @@ export const WelcomeVideo: React.FC = memo(() => {
               <p className="text-gray-500 text-sm font-bold uppercase tracking-widest mb-2">With Love & Expectation,</p>
               {/* Using font-serif and italic to mimic a signature */}
               <p className="font-serif italic text-4xl text-gold-light tracking-wide">
-                The Leadership Team
+                The TMGN Community
               </p>
             </div>
 

@@ -19,6 +19,10 @@ const Watch = lazy(() => import('./features/watch/views/Watch').then(m => ({ def
 const PrayerWall = lazy(() => import('./features/prayer/views/PrayerWall').then(m => ({ default: m.PrayerWall })));
 const Ministry = lazy(() => import('./features/ministries/views/Ministry').then(m => ({ default: m.Ministry })));
 
+// Lazy loading placeholder components
+const AlterOne = lazy(() => import('./features/about/views/alterone').then(m => ({ default: m.AlterOne })));
+const AlterTwo = lazy(() => import('./features/about/views/altertwo').then(m => ({ default: m.AlterTwo })));
+
 // Lazy loading Admin Portal components 
 const Login = lazy(() => import('./features/Admin/Login'));
 const AdminDashboard = lazy(() => import('./features/Admin/AdminDashboard'));
@@ -51,6 +55,10 @@ const AnimatedRoutes = () => {
         <Route path="/watch" element={<Watch />} />
         <Route path="/prayer" element={<PrayerWall />} />
         <Route path="/ministries" element={<Ministry />} />
+
+        {/* Placeholder/Test Routes */}
+        <Route path="/alter-one" element={<AlterOne />} />
+        <Route path="/alter-two" element={<AlterTwo />} />
 
         {/* NEW: Admin Routes */}
         <Route path="/login" element={<Login />} />

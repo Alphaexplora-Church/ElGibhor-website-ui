@@ -25,22 +25,14 @@ export const ServiceSchedule: React.FC = memo(() => {
             className="bg-background-card/80 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-2xl relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-royal-purple/30 rounded-bl-[100px] pointer-events-none transition-transform group-hover:scale-110 duration-500"></div>
-            <h3 className="text-3xl font-bold text-white mb-8 border-b border-white/10 pb-4">Service Times</h3>
+            <h3 className="text-3xl font-bold text-white mb-8 border-b border-white/10 pb-4">Service Time</h3>
             <div className="space-y-6">
               <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
-                <span className="text-xl font-bold text-white">First Service</span>
-                <span className="text-gold font-black text-xl tracking-wider">10:00 AM</span>
-              </div>
-              <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
-                <span className="text-xl font-bold text-white">Second Service</span>
-                <span className="text-gold font-black text-xl tracking-wider">2:00 PM</span>
-              </div>
-              <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
-                <span className="text-xl font-bold text-white">Third Service</span>
-                <span className="text-gold font-black text-xl tracking-wider">4:00 PM</span>
+                <span className="text-xl font-bold text-white">SUNDAY</span>
+                <span className="text-gold font-black text-xl tracking-wider">8:30 AM to 10:30 AM</span>
               </div>
             </div>
-            <p className="mt-8 text-gray-400 font-light italic">All services are approximately three to four hours long.</p>
+            <p className="mt-8 text-gray-400 font-light italic">Sunday Service is approximately two to three hours long.</p>
           </motion.div>
 
           {/* Location Card */}
@@ -66,12 +58,12 @@ export const ServiceSchedule: React.FC = memo(() => {
             <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent"></div>
 
             <div className="relative z-10 p-10">
-              <span className="bg-gold text-royal-purple text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4 inline-block">Main Campus</span>
+              <span className="bg-gold text-royal-purple text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4 inline-block">Main Church</span>
               <h3 className="text-3xl font-bold text-white mb-2">
                 Marikina City</h3>
-              <p className="text-gray-300 mb-6 font-light">Dela Paz Street, Santo Nino, Marikina City</p>
+              <p className="text-gray-300 mb-6 font-light">St. Mary Ave, Provident Village, Marikina City</p>
 
-              <a href="https://maps.app.goo.gl/VZfkTTScj4NycQKZA" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl inline-block text-center">
+              <a href="https://maps.app.goo.gl/LGoT9RB46my7kYXbA" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl inline-block text-center">
                 Get Directions
               </a>
             </div>

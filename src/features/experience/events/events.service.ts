@@ -1,6 +1,7 @@
 import type { ChurchEvent, Announcement } from './events.types';
 
-const API_BASE = 'http://localhost:4000';
+// Vercel Ready: Kukunin ang link sa .env, kung wala, gagamitin ang live Render link.
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://church-website-backend-3e7l.onrender.com';
 
 export const EventsService = {
     fetchEvents: async (): Promise<ChurchEvent[]> => {
@@ -12,7 +13,7 @@ export const EventsService = {
 
     fetchAnnouncements: async (): Promise<Announcement[]> => {
         const response = await fetch(`${API_BASE}/api/contents/public/announcements/2`);
-        if (!response.ok) throw new Error('Failed to fetch an nouncements');
+        if (!response.ok) throw new Error('Failed to fetch announcements');
         const json = await response.json();
         return (json.data ?? json) as Announcement[];
     }

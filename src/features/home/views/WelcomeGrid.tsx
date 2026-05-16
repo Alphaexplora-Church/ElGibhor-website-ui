@@ -132,6 +132,7 @@ export const WelcomeGrid: React.FC = memo(() => {
         )}
 
         {/* Reassurance Strip - Redesigned to fit the premium light theme */}
+        {/*
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,6 +147,7 @@ export const WelcomeGrid: React.FC = memo(() => {
             </div>
           ))}
         </motion.div>
+        */}
 
       </div>
     </section>

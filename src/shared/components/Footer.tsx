@@ -20,15 +20,16 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col items-center md:items-end gap-4">
           <h3 className="text-sm font-semibold text-white">Connect With Us</h3>
           <div className="flex space-x-3">
-            <a href="https://www.facebook.com/EGCcommunity" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
+            <a href="https://www.facebook.com/TMGNcommunity" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
               <FaFacebook size={16} />
             </a>
-            <a href="https://www.instagram.com/tmgn.inc?igsh=MTR4OHYzYXNsYXYxZA%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
+            <a href="https://www.instagram.com/tmgn.inc/" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
               <FaInstagram size={16} />
             </a>
-            <a href="mailto:inc.tmgn@gmail.com" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
+            {/* <a href="mailto:inc.tmgn@gmail.com" className="w-9 h-9 rounded-full bg-background-dark border border-border-dark flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all">
               <FaEnvelope size={16} />
             </a>
+            */}
           </div>
         </div>
       </div>

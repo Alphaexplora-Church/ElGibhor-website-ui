@@ -20,7 +20,7 @@ const expects = [
     id: "03",
     title: "First-Time Guests",
     sub: "Welcome to our Marikina family! We are a movement of devoted Christ-followers excited to meet you.",
-    img: "/assets/Photos/SampleImg2.png"
+    img: "/assets/Photos/Image6.png"
   }
 ];
 

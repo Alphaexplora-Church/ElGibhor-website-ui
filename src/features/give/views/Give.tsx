@@ -16,13 +16,13 @@ const modalData = {
     ]
   },
   coffee: {
-    title: "Fuel the AlphaExplora Team",
+    title: "Fuel the Alphaexplora Team",
     description: "Scan to support the developers behind the TMGN digital experience.",
     qrSrc: "/ALPHA-QR.png",
     link: "https://forms.gle/NxPUnynYgTjnqFEcA",
     color: "from-purple-500 to-purple-600",
     steps: [
-      "Scan QR to open the AlphaExplora support form.",
+      "Scan QR to open the Alphaexplora support form.",
       "Fill in your name, contact, and preferred Bank/E-Wallet channel.",
       "Complete the transfer and upload a screenshot of your receipt in the form."
     ]
@@ -197,7 +197,7 @@ export const Give: React.FC = memo(() => {
                 <div className={`relative w-full overflow-hidden shrink-0 transition-all duration-700 ${expandedCard === 'coffee' ? 'h-40 sm:h-56 lg:h-64' : 'h-24 lg:h-40'}`}>
                   <motion.img
                     whileHover={{ scale: 1.05 }} transition={{ duration: 0.7 }}
-                    src="https://res.cloudinary.com/dlk93aehl/image/upload/f_auto,q_auto,w_1920,c_scale/v1775011709/alpha3.jpg" alt="Tech team"
+                    src="/assets/Photos/tech_team1.png" alt="Tech team"
                     className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11081f] via-[#11081f]/80 to-transparent" />
@@ -254,7 +254,8 @@ export const Give: React.FC = memo(() => {
           </div>
 
           {/* ── Single Bottom Trust Badge ── */}
-          <motion.div
+
+          {/*  <motion.div
             custom={2} initial="hidden" animate="visible" variants={cardVariants}
             className="flex justify-center mt-16 lg:mt-24"
           >
@@ -269,7 +270,7 @@ export const Give: React.FC = memo(() => {
                 <p className="text-gray-500 text-xs">256-bit encryption</p>
               </div>
             </div>
-          </motion.div>
+          </motion.div>*/}
 
         </div>
       </section>

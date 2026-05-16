@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface PlanVisitModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
 export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose }) => {
@@ -39,15 +39,15 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-8">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
                         className="absolute inset-0 bg-[#0C0515]/90 backdrop-blur-sm cursor-pointer"
                     />
-                    
-                    <motion.div 
+
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -58,7 +58,7 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gold/10 rounded-full blur-[80px] pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-royal-purple/20 rounded-full blur-[80px] pointer-events-none"></div>
 
-                        <button 
+                        <button
                             onClick={onClose}
                             className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-white/50 hover:text-white transition-colors z-20 bg-white/5 rounded-full hover:bg-white/10"
                         >
@@ -82,23 +82,23 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                                         <div className="flex flex-col sm:flex-row gap-5">
                                             <div className="flex-1">
                                                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">First Name *</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     required
                                                     placeholder="First name"
                                                     value={formData.firstName}
-                                                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                                                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors text-sm sm:text-base"
                                                 />
                                             </div>
                                             <div className="flex-1">
                                                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Last Name *</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     required
                                                     placeholder="Last name"
                                                     value={formData.lastName}
-                                                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                                                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors text-sm sm:text-base"
                                                 />
                                             </div>
@@ -106,12 +106,12 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
 
                                         <div>
                                             <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Email *</label>
-                                            <input 
-                                                type="email" 
+                                            <input
+                                                type="email"
                                                 required
                                                 placeholder="your@email.com"
                                                 value={formData.email}
-                                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors text-sm sm:text-base"
                                             />
                                         </div>
@@ -119,9 +119,9 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                                         <div>
                                             <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Preferred Service</label>
                                             <div className="relative">
-                                                <select 
+                                                <select
                                                     value={formData.service}
-                                                    onChange={(e) => setFormData({...formData, service: e.target.value})}
+                                                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                                                     className="w-full appearance-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white hover:border-white/20 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors cursor-pointer text-sm sm:text-base"
                                                 >
                                                     <option value="" disabled className="text-gray-500">Select a service</option>
@@ -137,21 +137,21 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                                         <div className="flex gap-5">
                                             <div className="flex-1">
                                                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Adults</label>
-                                                <input 
-                                                    type="number" 
+                                                <input
+                                                    type="number"
                                                     min="1"
                                                     value={formData.adults}
-                                                    onChange={(e) => setFormData({...formData, adults: parseInt(e.target.value) || 1})}
+                                                    onChange={(e) => setFormData({ ...formData, adults: parseInt(e.target.value) || 1 })}
                                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors text-sm sm:text-base"
                                                 />
                                             </div>
                                             <div className="flex-1">
                                                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Kids</label>
-                                                <input 
-                                                    type="number" 
+                                                <input
+                                                    type="number"
                                                     min="0"
                                                     value={formData.kids}
-                                                    onChange={(e) => setFormData({...formData, kids: parseInt(e.target.value) || 0})}
+                                                    onChange={(e) => setFormData({ ...formData, kids: parseInt(e.target.value) || 0 })}
                                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-gold transition-colors text-sm sm:text-base"
                                                 />
                                             </div>
@@ -162,12 +162,12 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                                             <div className="flex flex-col sm:flex-row gap-4">
                                                 <label className="flex items-center cursor-pointer group">
                                                     <div className="relative flex items-center">
-                                                        <input 
-                                                            type="radio" 
+                                                        <input
+                                                            type="radio"
                                                             name="userType"
                                                             className="sr-only"
                                                             checked={formData.type === 'first-time'}
-                                                            onChange={() => setFormData({...formData, type: 'first-time'})}
+                                                            onChange={() => setFormData({ ...formData, type: 'first-time' })}
                                                         />
                                                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${formData.type === 'first-time' ? 'border-gold bg-gold/20' : 'border-white/20 bg-white/5 group-hover:border-white/40'}`}>
                                                             {formData.type === 'first-time' && <div className="w-2.5 h-2.5 rounded-full bg-gold"></div>}
@@ -175,21 +175,21 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                                                     </div>
                                                     <span className={`ml-3 text-sm transition-colors ${formData.type === 'first-time' ? 'text-white font-medium' : 'text-gray-400'}`}>First-Time Guest</span>
                                                 </label>
-                                                
+
                                                 <label className="flex items-center cursor-pointer group">
                                                     <div className="relative flex items-center">
-                                                        <input 
-                                                            type="radio" 
+                                                        <input
+                                                            type="radio"
                                                             name="userType"
                                                             className="sr-only"
                                                             checked={formData.type === 'returning'}
-                                                            onChange={() => setFormData({...formData, type: 'returning'})}
+                                                            onChange={() => setFormData({ ...formData, type: 'returning' })}
                                                         />
                                                         <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${formData.type === 'returning' ? 'border-gold bg-gold/20' : 'border-white/20 bg-white/5 group-hover:border-white/40'}`}>
                                                             {formData.type === 'returning' && <div className="w-2.5 h-2.5 rounded-full bg-gold"></div>}
                                                         </div>
                                                     </div>
-                                                    <span className={`ml-3 text-sm transition-colors ${formData.type === 'returning' ? 'text-white font-medium' : 'text-gray-400'}`}>Returning Member</span>
+                                                    <span className={`ml-3 text-sm transition-colors ${formData.type === 'returning' ? 'text-white font-medium' : 'text-gray-400'}`}>Returning Guest</span>
                                                 </label>
                                             </div>
                                         </div>

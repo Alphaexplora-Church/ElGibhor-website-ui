@@ -154,7 +154,7 @@ export const PlanVisitForm: FC = () => {
                         {formData.type === 'returning' && <div className="w-3 h-3 rounded-full bg-gold"></div>}
                       </div>
                     </div>
-                    <span className={`ml-3 text-sm font-medium transition-colors ${formData.type === 'returning' ? 'text-white' : 'text-white/60'}`}>Returning Member</span>
+                    <span className={`ml-3 text-sm font-medium transition-colors ${formData.type === 'returning' ? 'text-white' : 'text-white/60'}`}>Returning Guest</span>
                   </label>
                 </div>
               </div>
