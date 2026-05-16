@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export const AlterOne: React.FC = memo(() => {
     return (
-        <section className="relative w-full z-10 py-24 overflow-hidden bg-[#0C0515]">
+        <section id="alterone" className="relative w-full z-10 py-24 overflow-hidden bg-[#0C0515]">
 
             {/* Background Ambience */}
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-royal-purple/10 rounded-full blur-[120px] pointer-events-none -z-10" />

@@ -15,7 +15,7 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-8">
+                <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 sm:p-6 md:p-8">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}

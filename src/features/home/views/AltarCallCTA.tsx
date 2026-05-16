@@ -43,7 +43,7 @@ export const AltarCallCTA: React.FC<AltarCallCTAProps> = memo(({ onOpenVisitModa
             <div className="relative w-full">
               <blockquote className="relative z-10">
                 {/* FIXED: Increased text opacity values from 15/[0.09] to 50/35 for crystal-clear legibility */}
-                <p className="font-serif italic text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gold90 lg:text-gold/90 leading-[1.2] lg:leading-[1.15] tracking-tight select-none text-center lg:text-left break-words">
+                <p className="font-serif italic text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gold/90 leading-[1.2] lg:leading-[1.15] tracking-tight select-none text-center lg:text-left break-words">
                   "For I know
                   <br className="hidden sm:block" />
                   {' '}the plans

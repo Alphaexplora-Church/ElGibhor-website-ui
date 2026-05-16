@@ -22,7 +22,7 @@ export const AlterTwo: React.FC = memo(() => {
     ];
 
     return (
-        <section className="relative w-full z-10 py-24 overflow-hidden bg-[#0C0515]">
+        <section id="altertwo" className="relative w-full z-10 py-24 overflow-hidden bg-[#0C0515]">
 
             {/* Background Ambience */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-[radial-gradient(ellipse_at_top,rgba(75,42,111,0.2)_0%,transparent_70%)] pointer-events-none"></div>
@@ -87,7 +87,7 @@ export const AlterTwo: React.FC = memo(() => {
                   rounded-2xl md:rounded-[2rem] overflow-hidden cursor-pointer
                   transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]
                   ${isHovered ? 'scale-[1.03] z-20 shadow-[0_20px_50px_rgba(239,191,4,0.15)] ring-1 ring-gold/30' : 'z-10'}
-                  ${isDimmed ? 'opacity-20 blur-[3px] scale-[0.98] grayscale-[50%]' : 'opacity-100 blur-0 grayscale-0'}
+                  ${isDimmed ? 'opacity-20 scale-[0.98]' : 'opacity-100'}
                 `}
                             >
                                 <img

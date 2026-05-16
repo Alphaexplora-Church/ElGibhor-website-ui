@@ -12,8 +12,12 @@ const navData = [
     path: '/about',
     dropdown: [
       { title: 'Who We Are', sub: 'Our Manifesto', path: '/about#manifesto' },
-      { title: 'Leadership', sub: 'National Team', path: '/about#leaders' },
-      { title: 'Churches', sub: 'Daughter Churches', path: '/about#churches' },
+
+      { title: 'Our Leadership', sub: 'Shepherding the Community', path: '/about#alterone' },
+      { title: 'Life at TMGAN', sub: 'Glimpse into Our Community', path: '/about#altertwo' },
+
+      //{ title: 'Leadership', sub: 'National Team', path: '/about#leaders' },
+      //{ title: 'Churches', sub: 'Daughter Churches', path: '/about#churches' },
     ]
   },
   {
@@ -231,6 +235,7 @@ export const Navbar: React.FC = () => {
                 ))}
               </div>
 
+              {/* FIXED: Restored Watch Live Button for Mobile */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -243,18 +248,17 @@ export const Navbar: React.FC = () => {
                 >
                   Plan a Visit
                 </button>
-                {/* <Link
+                <Link
                   to="/watch"
                   onClick={() => handleNavClick('/watch')}
-                  className="flex items-center justify-center h-14 w-full rounded-xl bg-gold text-royal-purple font-black shadow-xl"
+                  className="flex items-center justify-center h-14 w-full rounded-xl bg-gold text-royal-purple-dark font-black tracking-wide shadow-[0_0_20px_rgba(239,191,4,0.3)] transition-transform active:scale-95"
                 >
                   <span className="relative flex h-3 w-3 mr-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
                   </span>
                   Watch Live
-                </Link> 
-              */}
+                </Link>
               </motion.div>
             </div>
           </motion.div>
