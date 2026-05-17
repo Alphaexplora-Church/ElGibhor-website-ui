@@ -38,8 +38,7 @@ function useCountdown(target: Date) {
 export const Watch: React.FC = memo(() => {
   const [isLive, setIsLive] = useState(false);
 
-  // DITO MO ILALAGAY YUNG LINK NA IBIBIGAY NI RICHARD BUKAS:
-  const FACEBOOK_LIVE_URL = "https://www.facebook.com/facebook/videos/10153231379946729/";
+  // We are not using FACEBOOK_LIVE_URL variable anymore since the full iframe source is embedded directly below.
 
   const next = getNextStream();
   const { d, h, m, s } = useCountdown(next.target);
@@ -102,7 +101,7 @@ export const Watch: React.FC = memo(() => {
               <div className="relative w-full rounded-3xl overflow-hidden bg-black/20 border border-white/10 shadow-2xl">
                 <div className="aspect-video">
                   <iframe
-                    src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(FACEBOOK_LIVE_URL)}&show_text=false&width=auto`}
+                    src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FTMGNcommunity%2Fvideos%2F1993631014575266%2F&show_text=false&width=auto&t=0"
                     width="100%"
                     height="100%"
                     style={{ border: 'none', overflow: 'hidden' }}
@@ -110,8 +109,8 @@ export const Watch: React.FC = memo(() => {
                     frameBorder="0"
                     allowFullScreen={true}
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                    title="Church Live Stream"
                     className="w-full h-full"
+                    title="Church Live Stream"
                   ></iframe>
                 </div>
               </div>
