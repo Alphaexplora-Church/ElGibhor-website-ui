@@ -14,7 +14,7 @@ const navData = [
       { title: 'Who We Are', sub: 'Our Manifesto', path: '/about#manifesto' },
 
       { title: 'Our Leadership', sub: 'Shepherding the Community', path: '/about#alterone' },
-      { title: 'Life at TMGAN', sub: 'Glimpse into Our Community', path: '/about#altertwo' },
+      { title: 'Life at TMGN', sub: 'Glimpse into Our Community', path: '/about#altertwo' },
 
       //{ title: 'Leadership', sub: 'National Team', path: '/about#leaders' },
       //{ title: 'Churches', sub: 'Daughter Churches', path: '/about#churches' },
