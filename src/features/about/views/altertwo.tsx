@@ -6,8 +6,8 @@ export const AlterTwo: React.FC = memo(() => {
 
     // 36 slots para sa collage gamit ang gal1 to gal20 na naka-loop
     // OPTIMIZATION: Idinagdag ang w_600,c_limit para tipid sa Cloudinary bandwidth/credits
-    const galleryImages = Array.from({ length: 20 }, (_, i) => {
-        const imageNum = (i % 20) + 1; // Naglo-loop mula 1 hanggang 20
+    const galleryImages = Array.from({ length: 21 }, (_, i) => {
+        const imageNum = (i % 21) + 1; // Naglo-loop mula 1 hanggang 21
         return `https://res.cloudinary.com/djben2yoo/image/upload/f_auto,q_auto,w_600,c_limit/v1778966222/gal${imageNum}.jpg`;
     });
 
