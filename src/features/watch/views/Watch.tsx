@@ -101,7 +101,7 @@ export const Watch: React.FC = memo(() => {
               <div className="relative w-full rounded-3xl overflow-hidden bg-black/20 border border-white/10 shadow-2xl">
                 <div className="aspect-video">
                   <iframe
-                    src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FTMGNcommunity%2Fvideos%2F1993631014575266%2F&show_text=false&width=auto&t=0"
+                    src="https://www.facebook.com/TMGNcommunity"
                     width="100%"
                     height="100%"
                     style={{ border: 'none', overflow: 'hidden' }}
