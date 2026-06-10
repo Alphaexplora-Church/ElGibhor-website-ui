@@ -29,7 +29,7 @@ export const ServiceSchedule: React.FC = memo(() => {
             <div className="space-y-6">
               <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border-l-4 border-gold">
                 <span className="text-xl font-bold text-white">SUNDAY</span>
-                <span className="text-gold font-black text-xl tracking-wider">8:30 AM to 10:30 AM</span>
+                <span className="text-gold font-black text-xl tracking-wider">9:00 AM to 11:00 AM</span>
               </div>
             </div>
             <p className="mt-8 text-gray-400 font-light italic">Sunday Service is approximately two to three hours long.</p>
