@@ -7,7 +7,7 @@ const PLACEHOLDER_IMG = "https://c.pxhere.com/photos/15/67/banner_header_easter_
 export const Events: React.FC = memo(() => {
   const { isLoading, error, featuredEvent, secondaryEvents: rawSecondaryEvents, announcements } = useEventsViewModel();
   // For testing, limit showing events to 1
-  const secondaryEvents = rawSecondaryEvents.slice(0, 2);
+  const secondaryEvents = rawSecondaryEvents.slice(0, 1);
 
   const totalCount = (featuredEvent ? 1 : 0) + secondaryEvents.length;
 
