@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 export const AlterTwo: React.FC = memo(() => {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-    // 36 pictures para sa full collage effect
-    const galleryImages = Array.from({ length: 36 }, (_, i) => {
-        return `https://picsum.photos/seed/${i + 50}/800/800`;
+    // 36 slots para sa collage gamit ang gal1 to gal20 na naka-loop
+    // OPTIMIZATION: Idinagdag ang w_600,c_limit para tipid sa Cloudinary bandwidth/credits
+    const galleryImages = Array.from({ length: 21 }, (_, i) => {
+        const imageNum = (i % 21) + 1; // Naglo-loop mula 1 hanggang 21
+        return `https://res.cloudinary.com/djben2yoo/image/upload/f_auto,q_auto,w_600,c_limit/v1778966222/gal${imageNum}.jpg`;
     });
 
     // Iba't ibang aspect ratios para magkaroon ng dynamic widths ang bawat picture
@@ -20,7 +22,7 @@ export const AlterTwo: React.FC = memo(() => {
     ];
 
     return (
-        <section className="relative w-full z-10 py-24 overflow-hidden bg-[#0C0515]">
+        <section id="altertwo" className="relative w-full z-10 py-24 overflow-hidden bg-[#0C0515]">
 
             {/* Background Ambience */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-[radial-gradient(ellipse_at_top,rgba(75,42,111,0.2)_0%,transparent_70%)] pointer-events-none"></div>
@@ -38,7 +40,7 @@ export const AlterTwo: React.FC = memo(() => {
                         <div className="flex items-center justify-center gap-4 mb-6">
                             <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold"></div>
                             <span className="text-gold font-black uppercase tracking-[0.3em] text-xs md:text-sm">
-                                Life at TMGN
+                                Life at TMGAN
                             </span>
                             <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold"></div>
                         </div>
@@ -85,7 +87,7 @@ export const AlterTwo: React.FC = memo(() => {
                   rounded-2xl md:rounded-[2rem] overflow-hidden cursor-pointer
                   transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]
                   ${isHovered ? 'scale-[1.03] z-20 shadow-[0_20px_50px_rgba(239,191,4,0.15)] ring-1 ring-gold/30' : 'z-10'}
-                  ${isDimmed ? 'opacity-20 blur-[3px] scale-[0.98] grayscale-[50%]' : 'opacity-100 blur-0 grayscale-0'}
+                  ${isDimmed ? 'opacity-20 scale-[0.98]' : 'opacity-100'}
                 `}
                             >
                                 <img

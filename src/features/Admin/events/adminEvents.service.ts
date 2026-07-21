@@ -2,8 +2,8 @@
 
 import type { ChurchEvent, Announcement, EventFormData, ContentTab } from './adminEvents.types';
 
-// Update this to your Render URL when you deploy!
-const API_BASE = 'http://localhost:4000';
+// Vercel Ready: reads from env variable
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const AdminEventsService = {
     /**
@@ -11,7 +11,7 @@ export const AdminEventsService = {
      */
     fetchEvents: async (): Promise<ChurchEvent[]> => {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/contents/admin/events`, {
+        const response = await fetch(`${API_BASE_URL}/api/contents/admin/events`, {
             headers: {
                 ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             }
@@ -26,7 +26,7 @@ export const AdminEventsService = {
      */
     fetchAnnouncements: async (): Promise<Announcement[]> => {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/contents/admin/announcements`, {
+        const response = await fetch(`${API_BASE_URL}/api/contents/admin/announcements`, {
             headers: {
                 ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             }
@@ -82,7 +82,7 @@ export const AdminEventsService = {
         const token = localStorage.getItem('token');
 
         // POST to the backend — do NOT set Content-Type; browser sets it with the correct boundary
-        const response = await fetch(`${API_BASE}/api/contents/admin`, {
+        const response = await fetch(`${API_BASE_URL}/api/contents/admin`, {
             method: 'POST',
             headers: {
                 ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -109,7 +109,7 @@ export const AdminEventsService = {
      */
     updateEvent: async (id: number, data: EventFormData): Promise<void> => {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/contents/admin/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/contents/admin/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export const AdminEventsService = {
      */
     deleteEvent: async (id: number): Promise<void> => {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/contents/admin/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/contents/admin/${id}`, {
             method: 'DELETE',
             headers: {
                 ...(token ? { 'Authorization': `Bearer ${token}` } : {})

@@ -65,6 +65,7 @@ export const WelcomeGrid: React.FC = memo(() => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
+                    onClick={() => setActiveIndex(idx)}
                     onMouseEnter={() => setActiveIndex(idx)}
                     className="relative group cursor-pointer py-6 border-b border-gray-300/50 last:border-transparent"
                   >
@@ -98,22 +99,44 @@ export const WelcomeGrid: React.FC = memo(() => {
                         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                       </div>
                     </div>
+
+                    {/* ── MOBILE INLINE IMAGE (only visible on mobile when active) ── */}
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                          className="lg:hidden overflow-hidden mt-4"
+                        >
+                          <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border border-white/50">
+                            <img
+                              src={ministry.imageUrl}
+                              alt={ministry.title}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-royal-purple-dark/30 via-transparent to-transparent pointer-events-none" />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 );
               })}
             </div>
 
-            {/* RIGHT SIDE: Cinematic Image Canvas */}
+            {/* RIGHT SIDE: Cinematic Image Canvas (desktop only) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-7 relative w-full aspect-square md:aspect-[4/3] lg:aspect-auto lg:h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/50"
+              className="hidden lg:block lg:col-span-7 relative w-full lg:h-[600px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/50"
             >
               <AnimatePresence mode="wait">
                 <motion.img
-                  key={activeIndex} // Changing the key triggers the AnimatePresence crossfade
+                  key={activeIndex}
                   initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}

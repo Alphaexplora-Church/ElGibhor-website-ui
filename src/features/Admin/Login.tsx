@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -14,16 +16,8 @@ export default function Login() {
         e.preventDefault();
         setError('');
 
-        // 🛑 TEMPORARY BYPASS FOR UI TESTING 🛑
-        if (email === 'admin@tmgn.com' && password === 'admin123') {
-            // Set a fake token so the dashboard doesn't kick us out
-            localStorage.setItem('token', 'mock-temporary-token');
-            navigate('/admin/dashboard');
-            return;
-        }
-
         try {
-            const res = await fetch('http://localhost:4000/api/auth/login', {
+            const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -56,7 +50,7 @@ export default function Login() {
                 <h2 className="text-3xl font-black text-white mb-2 text-center tracking-tight">
                     Admin <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-light to-gold">Portal</span>
                 </h2>
-                <p className="text-gray-400 text-center text-sm font-light mb-8">Sign in to manage TMGN content.</p>
+                <p className="text-gray-400 text-center text-sm font-light mb-8">Sign in to manage TMGAN content.</p>
 
                 {error && (
                     <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold text-center py-3 rounded-xl mb-6 backdrop-blur-md">

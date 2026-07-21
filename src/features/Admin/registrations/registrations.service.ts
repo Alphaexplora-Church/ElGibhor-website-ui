@@ -6,7 +6,7 @@
 import type { Registration } from './registrations.types';
 
 // Update this to your Render URL when you deploy!
-const API_BASE = 'http://localhost:4000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const RegistrationsService = {
   /**
@@ -16,7 +16,7 @@ export const RegistrationsService = {
   fetchRegistrations: async (): Promise<Registration[]> => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${API_BASE}/api/registrations`, {
+      const response = await fetch(`${API_BASE_URL}/api/registrations`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export const RegistrationsService = {
   deleteRegistration: async (id: number): Promise<void> => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${API_BASE}/api/registrations/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/registrations/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

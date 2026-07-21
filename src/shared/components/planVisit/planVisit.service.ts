@@ -2,7 +2,7 @@
 
 import type { PlanVisitFormData, RegistrationApiResponse } from './planVisit.types';
 
-const API_BASE = 'http://localhost:4000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const PlanVisitService = {
     /**
@@ -10,7 +10,7 @@ export const PlanVisitService = {
      * POST /api/registration
      */
     submitRegistration: async (data: PlanVisitFormData): Promise<RegistrationApiResponse> => {
-        const response = await fetch(`${API_BASE}/api/registrations`, {
+        const response = await fetch(`${API_BASE_URL}/api/registrations`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

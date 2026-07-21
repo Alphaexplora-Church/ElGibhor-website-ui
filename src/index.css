@@ -22,6 +22,7 @@
 
   --font-sans: 'Inter', sans-serif;
   --font-heading: 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', serif;
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-pulse-slow: pulse-slow 20s cubic-bezier(0.4, 0, 0.6, 1) infinite;
