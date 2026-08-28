@@ -27,6 +27,7 @@ const AlterTwo = lazy(() => import('./features/about/views/altertwo').then(m => 
 const Login = lazy(() => import('./features/Admin/Login'));
 const AdminDashboard = lazy(() => import('./features/Admin/AdminDashboard'));
 const AdminEvents = lazy(() => import('./features/Admin/AdminEvents'));
+const AdminJourneys = lazy(() => import('./features/Admin/AdminJourneys'));
 const AdminRegistrations = lazy(() => import('./features/Admin/registrations/AdminRegistrations'));
 
 // A lightweight fallback spinner
@@ -64,6 +65,7 @@ const AnimatedRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/events" element={<AdminEvents />} />
+        <Route path="/admin/journeys" element={<AdminJourneys />} />
         <Route path="/admin/registration" element={<AdminRegistrations />} />
       </Routes>
     </AnimatePresence>
