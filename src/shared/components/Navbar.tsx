@@ -12,10 +12,8 @@ const navData = [
     path: '/about',
     dropdown: [
       { title: 'Who We Are', sub: 'Our Manifesto', path: '/about#manifesto' },
-
       { title: 'Our Leadership', sub: 'Shepherding the Community', path: '/about#alterone' },
       { title: 'Life at TMGN', sub: 'Glimpse into Our Community', path: '/about#altertwo' },
-
       //{ title: 'Leadership', sub: 'National Team', path: '/about#leaders' },
       //{ title: 'Churches', sub: 'Daughter Churches', path: '/about#churches' },
     ]
@@ -36,9 +34,9 @@ const navData = [
       { title: 'Serve', sub: 'Make a Difference', path: '/engage#serve' },
       //{ title: 'Contact', sub: 'Let\'s Talk', path: '/engage#contact' }
     ]
-  }
+  },
+  { name: 'Library', path: '/library' },
 ];
-
 export const Navbar: React.FC = () => {
   const { scrollY } = useScroll();
   const [hasScrolled, setHasScrolled] = useState(false);

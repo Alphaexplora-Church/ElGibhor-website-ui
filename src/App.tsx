@@ -15,9 +15,8 @@ const AboutUs = lazy(() => import('./features/about/views/AboutUs').then(m => ({
 const Experience = lazy(() => import('./features/experience/views/Experience').then(m => ({ default: m.Experience })));
 const Give = lazy(() => import('./features/give/views/Give').then(m => ({ default: m.Give })));
 const Engage = lazy(() => import('./features/engage/views/Engage').then(m => ({ default: m.Engage })));
-const Watch = lazy(() => import('./features/watch/views/Watch').then(m => ({ default: m.Watch })));
-const PrayerWall = lazy(() => import('./features/prayer/views/PrayerWall').then(m => ({ default: m.PrayerWall })));
-const Ministry = lazy(() => import('./features/ministries/views/Ministry').then(m => ({ default: m.Ministry })));
+const Watch = lazy(() => import("./features/watch/views/Library").then((m) => ({ default: m.Library })));
+const Library = lazy(() => import('./features/watch/views/Library').then(m => ({ default: m.Library })));
 
 // Lazy loading placeholder components
 const AlterOne = lazy(() => import('./features/about/views/alterone').then(m => ({ default: m.AlterOne })));
@@ -53,8 +52,7 @@ const AnimatedRoutes = () => {
         <Route path="/give" element={<Give />} />
         <Route path="/engage" element={<Engage />} />
         <Route path="/watch" element={<Watch />} />
-        <Route path="/prayer" element={<PrayerWall />} />
-        <Route path="/ministries" element={<Ministry />} />
+        <Route path="/library" element={<Library />} />
 
         {/* Placeholder/Test Routes */}
         <Route path="/alter-one" element={<AlterOne />} />
