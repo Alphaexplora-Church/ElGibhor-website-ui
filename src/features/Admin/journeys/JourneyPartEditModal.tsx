@@ -46,7 +46,7 @@ export function JourneyPartEditModal({ open, part, partNumber, onClose, onSave }
     const embedUrl = toEmbedUrl(draft.video_url);
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+        <div data-lenis-prevent className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
             <div className="bg-background-dark border border-white/10 rounded-3xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col max-h-[88vh]">
 
                 {/* Header */}

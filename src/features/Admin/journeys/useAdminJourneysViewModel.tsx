@@ -1,6 +1,6 @@
 // src/features/Admin/journeys/useAdminJourneysViewModel.tsx
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Journey, JourneyFormData, JourneyStatus, JourneyFilters } from './adminJourneys.types';
 import { DEFAULT_FILTERS } from './adminJourneys.types';
 import { AdminJourneysService } from './adminJourneys.service';
@@ -22,48 +22,72 @@ export interface AdminJourneysViewModel {
 
     showModal: boolean;
     editTarget: Journey | null;
-    deleteTarget: Journey | null;
+    isLoadingDetail: boolean;
 
     toast: { msg: string; type: 'success' | 'error' } | null;
 
     openCreateModal: () => void;
     openEditModal: (journey: Journey) => void;
     closeModal: () => void;
-    openDeleteModal: (journey: Journey) => void;
-    closeDeleteModal: () => void;
 
-    handleSave: (data: JourneyFormData) => Promise<void>;
-    handleDelete: () => Promise<void>;
+    handleSave: (data: JourneyFormData, thumbnailFile: File | null) => Promise<void>;
     handleSetStatus: (journey: Journey, status: JourneyStatus) => Promise<void>;
     retry: () => void;
 }
 
 export function useAdminJourneysViewModel(): AdminJourneysViewModel {
     const [journeys, setJourneys] = useState<Journey[]>([]);
+    const [allJourneys, setAllJourneys] = useState<Journey[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
     const [filters, setFilters] = useState<JourneyFilters>(DEFAULT_FILTERS);
 
     const [showModal, setShowModal] = useState(false);
     const [editTarget, setEditTarget] = useState<Journey | null>(null);
-    const [deleteTarget, setDeleteTarget] = useState<Journey | null>(null);
+    const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 
     const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
 
-    useEffect(() => { loadAll(); }, []);
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedSearch(search.trim()), 300);
+        return () => clearTimeout(timer);
+    }, [search]);
 
-    const loadAll = async () => {
+    const loadList = useCallback(async () => {
         setIsLoading(true);
         setError(null);
         try {
-            const data = await AdminJourneysService.fetchJourneys();
+            const data = await AdminJourneysService.fetchJourneys({
+                search: debouncedSearch || undefined,
+                status: filters.status === 'all' ? undefined : filters.status,
+            });
             setJourneys(data);
-        } catch {
-            setError('Could not load journeys. Make sure the backend is running.');
+        } catch (err) {
+            setError(err instanceof Error ? `Could not load journeys. ${err.message}` : 'Could not load journeys. Make sure the backend is running.');
         } finally {
             setIsLoading(false);
         }
+    }, [debouncedSearch, filters.status]);
+
+    const loadStats = useCallback(async () => {
+        try {
+            setAllJourneys(await AdminJourneysService.fetchJourneys());
+        } catch {
+            setAllJourneys([]);
+        }
+    }, []);
+
+    useEffect(() => { loadList(); }, [loadList]);
+
+    useEffect(() => {
+        loadStats();
+        AdminJourneysService.fetchCategories().catch(() => undefined);
+    }, [loadStats]);
+
+    const refresh = async () => {
+        await Promise.all([loadList(), loadStats()]);
     };
 
     const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
@@ -76,72 +100,66 @@ export function useAdminJourneysViewModel(): AdminJourneysViewModel {
     const toggleSortDir = () => setFilters(prev => ({ ...prev, sortDir: prev.sortDir === 'asc' ? 'desc' : 'asc' }));
 
     const filteredJourneys = useMemo(() => {
-        const q = search.toLowerCase();
-        let list = journeys.filter(j =>
-            (filters.status === 'all' || j.status === filters.status) &&
-            (j.title.toLowerCase().includes(q) || j.description.toLowerCase().includes(q))
-        );
-        list = [...list].sort((a, b) => {
+        return [...journeys].sort((a, b) => {
             const aVal = new Date(a[filters.sortBy]).getTime();
             const bVal = new Date(b[filters.sortBy]).getTime();
             return filters.sortDir === 'asc' ? aVal - bVal : bVal - aVal;
         });
-        return list;
-    }, [journeys, search, filters]);
+    }, [journeys, filters.sortBy, filters.sortDir]);
 
     const stats = useMemo(() => ({
-        total: journeys.length,
-        draft: journeys.filter(j => j.status === 'draft').length,
-        published: journeys.filter(j => j.status === 'published').length,
-        archived: journeys.filter(j => j.status === 'archived').length,
-    }), [journeys]);
+        total: allJourneys.length,
+        draft: allJourneys.filter(j => j.status === 'draft').length,
+        published: allJourneys.filter(j => j.status === 'published').length,
+        archived: allJourneys.filter(j => j.status === 'archived').length,
+    }), [allJourneys]);
 
     const openCreateModal = () => { setEditTarget(null); setShowModal(true); };
-    const openEditModal = (journey: Journey) => { setEditTarget(journey); setShowModal(true); };
-    const closeModal = () => { setShowModal(false); setEditTarget(null); };
-    const openDeleteModal = (journey: Journey) => setDeleteTarget(journey);
-    const closeDeleteModal = () => setDeleteTarget(null);
 
-    const handleSave = async (data: JourneyFormData) => {
+    const openEditModal = async (journey: Journey) => {
+        setEditTarget(journey);
+        setShowModal(true);
+        setIsLoadingDetail(true);
+        try {
+            setEditTarget(await AdminJourneysService.fetchJourneyDetail(journey.id));
+        } catch (err) {
+            showToast(err instanceof Error ? err.message : 'Could not load this journey.', 'error');
+        } finally {
+            setIsLoadingDetail(false);
+        }
+    };
+
+    const closeModal = () => { setShowModal(false); setEditTarget(null); setIsLoadingDetail(false); };
+
+    const handleSave = async (data: JourneyFormData, thumbnailFile: File | null) => {
         try {
             if (editTarget) {
-                const updated = await AdminJourneysService.updateJourney(editTarget.id, data);
-                setJourneys(prev => prev.map(j => j.id === editTarget.id ? updated : j));
+                await AdminJourneysService.updateJourney(editTarget.id, data, thumbnailFile);
                 showToast(`"${data.title}" updated successfully.`);
             } else {
-                const created = await AdminJourneysService.createJourney(data);
-                setJourneys(prev => [created, ...prev]);
+                await AdminJourneysService.createJourney(data, thumbnailFile);
                 showToast(`"${data.title}" created.`);
             }
             closeModal();
         } catch (err) {
             showToast(err instanceof Error ? err.message : 'An error occurred. Please try again.', 'error');
-        }
-    };
-
-    const handleDelete = async () => {
-        if (!deleteTarget) return;
-        try {
-            await AdminJourneysService.deleteJourney(deleteTarget.id);
-            setJourneys(prev => prev.filter(j => j.id !== deleteTarget.id));
-            showToast(`"${deleteTarget.title}" deleted.`);
-            closeDeleteModal();
-        } catch {
-            showToast('Failed to delete.', 'error');
+        } finally {
+            await refresh();
         }
     };
 
     const handleSetStatus = async (journey: Journey, status: JourneyStatus) => {
         const prevStatus = journey.status;
-        // Optimistic update
         setJourneys(prev => prev.map(j => j.id === journey.id ? { ...j, status } : j));
         try {
-            await AdminJourneysService.setStatus(journey.id, status);
-            const label = status === 'published' ? 'Published' : status === 'draft' ? 'Unpublished' : status === 'archived' ? 'Archived' : 'Updated';
-            showToast(`"${journey.title}" ${label.toLowerCase()}.`);
-        } catch {
+            await AdminJourneysService.setStatus(journey, status);
+            const label = status === 'archived' ? 'archived' : prevStatus === 'archived' ? 'restored' : 'published';
+            showToast(`"${journey.title}" ${label}.`);
+        } catch (err) {
             setJourneys(prev => prev.map(j => j.id === journey.id ? { ...j, status: prevStatus } : j));
-            showToast('Failed to update status.', 'error');
+            showToast(err instanceof Error ? err.message : 'Failed to update status.', 'error');
+        } finally {
+            await refresh();
         }
     };
 
@@ -149,10 +167,9 @@ export function useAdminJourneysViewModel(): AdminJourneysViewModel {
         journeys, filteredJourneys, isLoading, error,
         search, setSearch, filters, setStatusFilter, setSortBy, toggleSortDir,
         stats,
-        showModal, editTarget, deleteTarget, toast,
+        showModal, editTarget, isLoadingDetail, toast,
         openCreateModal, openEditModal, closeModal,
-        openDeleteModal, closeDeleteModal,
-        handleSave, handleDelete, handleSetStatus,
-        retry: loadAll,
+        handleSave, handleSetStatus,
+        retry: loadList,
     };
 }

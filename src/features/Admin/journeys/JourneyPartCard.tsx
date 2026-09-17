@@ -5,6 +5,7 @@ import { Reorder, useDragControls } from 'framer-motion';
 import { FiArchive, FiEdit2, FiRotateCcw, FiTrash2 } from 'react-icons/fi';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import type { JourneyPart } from './adminJourneys.types';
+import { isNewPartId } from './adminJourneys.types';
 
 interface JourneyPartCardProps {
     part: JourneyPart;
@@ -79,10 +80,12 @@ export function JourneyPartCard({ part, index, onEdit, onToggleStatus, onRemove 
                     className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-gold hover:bg-gold/10 transition-all">
                     {isArchived ? <FiRotateCcw className="w-3.5 h-3.5" /> : <FiArchive className="w-3.5 h-3.5" />}
                 </button>
-                <button type="button" onClick={onRemove} title="Remove part"
-                    className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all">
-                    <FiTrash2 className="w-3.5 h-3.5" />
-                </button>
+                {isNewPartId(part.id) && (
+                    <button type="button" onClick={onRemove} title="Remove part"
+                        className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all">
+                        <FiTrash2 className="w-3.5 h-3.5" />
+                    </button>
+                )}
             </div>
         </Reorder.Item>
     );

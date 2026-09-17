@@ -4,8 +4,8 @@ import AdminSidebar from '../../shared/components/AdminSidebar';
 import AdminHeader from '../../shared/components/AdminHeader';
 import { useAdminJourneysViewModel } from './journeys/useAdminJourneysViewModel';
 import { JourneyModal } from './journeys/JourneyModal';
-import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 import type { Journey, JourneyStatus } from './journeys/adminJourneys.types';
+import { CONTENT_TYPE_OPTIONS } from './journeys/adminJourneys.types';
 
 const STATUS_STYLES: Record<JourneyStatus, string> = {
     draft: 'text-gray-300 bg-white/10 border-white/20',
@@ -127,7 +127,7 @@ export default function AdminJourneys() {
                                 </thead>
                                 <tbody>
                                     {vm.filteredJourneys.map(j => (
-                                        <JourneyRow key={j.id} journey={j} onEdit={() => vm.openEditModal(j)} onDelete={() => vm.openDeleteModal(j)} onSetStatus={(s) => vm.handleSetStatus(j, s)} />
+                                        <JourneyRow key={j.id} journey={j} onEdit={() => vm.openEditModal(j)} onSetStatus={(s) => vm.handleSetStatus(j, s)} />
                                     ))}
                                 </tbody>
                             </table>
@@ -148,13 +148,7 @@ export default function AdminJourneys() {
             )}
 
             {/* Modals */}
-            <JourneyModal open={vm.showModal} initial={vm.editTarget} onClose={vm.closeModal} onSave={vm.handleSave} />
-            <ConfirmDeleteModal
-                open={!!vm.deleteTarget}
-                eventTitle={vm.deleteTarget?.title ?? ''}
-                onCancel={vm.closeDeleteModal}
-                onConfirm={vm.handleDelete}
-            />
+            <JourneyModal open={vm.showModal} initial={vm.editTarget} isLoadingParts={vm.isLoadingDetail} onClose={vm.closeModal} onSave={vm.handleSave} />
         </div>
     );
 }
@@ -185,20 +179,22 @@ function EmptyState() {
     );
 }
 
-function JourneyRow({ journey, onEdit, onDelete, onSetStatus }: {
+function JourneyRow({ journey, onEdit, onSetStatus }: {
     journey: Journey;
     onEdit: () => void;
-    onDelete: () => void;
     onSetStatus: (status: JourneyStatus) => void;
 }) {
-    const activeParts = journey.parts.filter(p => p.status === 'active').length;
+    const contentType = CONTENT_TYPE_OPTIONS.find(o => o.value === journey.contentType)?.label ?? journey.contentType;
     const updated = journey.updated_at ? new Date(journey.updated_at).toLocaleDateString() : '—';
 
     return (
         <tr className="border-t border-white/5 hover:bg-white/[0.03] transition-all group">
             <td className="px-6 py-5 max-w-[280px]">
                 <p className="font-black text-white truncate">{journey.title}</p>
-                <p className="text-sm text-gray-500 line-clamp-1">{journey.description}</p>
+                <p className="text-sm text-gray-500 line-clamp-1">{journey.summary || journey.description}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gold/70 mt-1 truncate">
+                    {[contentType, ...journey.categories].join(' · ')}
+                </p>
             </td>
             <td className="px-6 py-5">
                 <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${STATUS_STYLES[journey.status]}`}>
@@ -206,39 +202,35 @@ function JourneyRow({ journey, onEdit, onDelete, onSetStatus }: {
                 </span>
             </td>
             <td className="px-6 py-5 text-sm text-gray-300">
-                {activeParts} / {journey.parts.length}
+                {journey.publishedParts} published
             </td>
             <td className="px-6 py-5 text-sm text-gray-400">{updated}</td>
             <td className="px-6 py-5">
                 <div className="flex items-center justify-end gap-2 flex-wrap">
-                    {journey.status === 'published' ? (
-                        <ActionBtn label="Unpublish" onClick={() => onSetStatus('draft')} />
-                    ) : journey.status !== 'archived' ? (
+                    {journey.status === 'draft' && (
                         <ActionBtn label="Publish" onClick={() => onSetStatus('published')} highlight />
-                    ) : null}
+                    )}
 
                     {journey.status === 'archived' ? (
-                        <ActionBtn label="Restore" onClick={() => onSetStatus('draft')} />
+                        <ActionBtn label="Restore" onClick={() => onSetStatus('published')} />
                     ) : (
                         <ActionBtn label="Archive" onClick={() => onSetStatus('archived')} />
                     )}
 
                     <ActionBtn label="Edit" onClick={onEdit} />
-                    <ActionBtn label="Delete" onClick={onDelete} danger />
                 </div>
             </td>
         </tr>
     );
 }
 
-function ActionBtn({ label, onClick, danger, highlight }: { label: string; onClick: () => void; danger?: boolean; highlight?: boolean }) {
+function ActionBtn({ label, onClick, highlight }: { label: string; onClick: () => void; highlight?: boolean }) {
     return (
         <button
             onClick={onClick}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all
-                ${danger ? 'text-red-400 border-transparent hover:border-red-500/30 hover:bg-red-500/10'
-                    : highlight ? 'text-gold border-gold/30 bg-gold/10 hover:bg-gold/20'
-                        : 'text-gray-300 border-transparent hover:border-white/10 hover:bg-white/5'}`}
+                ${highlight ? 'text-gold border-gold/30 bg-gold/10 hover:bg-gold/20'
+                    : 'text-gray-300 border-transparent hover:border-white/10 hover:bg-white/5'}`}
         >
             {label}
         </button>
