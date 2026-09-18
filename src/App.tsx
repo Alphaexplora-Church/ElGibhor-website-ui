@@ -55,6 +55,7 @@ const AnimatedRoutes = () => {
         <Route path="/engage" element={<Engage />} />
         <Route path="/library" element={<Library />} />
         <Route path="/watch" element={<Watch />} />
+        <Route path="/library" element={<Library />} />
         <Route path="/prayer" element={<PrayerWall />} />
         <Route path="/ministries" element={<Ministry />} />
 
