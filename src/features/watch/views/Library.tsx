@@ -268,9 +268,7 @@ export const Library: React.FC = () => {
   };
 
   const togglePreacher = (name: string) => {
-    setActivePreachers((prev) =>
-      prev.includes(name) ? prev.filter((p) => p !== name) : [...prev, name]
-    );
+    setActivePreachers((prev) => (prev.includes(name) ? prev.filter((p) => p !== name) : [...prev, name]));
   };
 
   const clearPreachers = () => setActivePreachers([]);
@@ -469,10 +467,9 @@ export const Library: React.FC = () => {
         </div>
 
         {/* search (sermons tab only) */}
-        {activeTab !== 'teachers' && (
-          <div className="flex justify-center mb-12">
-            <div className="relative w-full max-w-xs" ref={categoryDropdownRef}>
-        
+        {activeTab === 'sermons' && (
+          <div className="flex justify-center mb-6">
+            <div className="relative w-full max-w-md">
               <svg className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" />
                 <path strokeLinecap="round" d="M21 21l-4.3-4.3" />
@@ -489,9 +486,9 @@ export const Library: React.FC = () => {
         )}
 
         {/* category dropdown, searchable — built for a long list of topics (sermons + series tabs) */}
-        {activeTab === 'sermons' && (
-          <div className="flex justify-center mb-6">
-            <div className="relative w-full max-w-md">
+        {activeTab !== 'teachers' && (
+          <div className="flex justify-center mb-12">
+            <div className="relative w-full max-w-xs" ref={categoryDropdownRef}>
               <button
                 type="button"
                 onClick={() => setCategoryOpen((prev) => !prev)}
@@ -723,9 +720,7 @@ export const Library: React.FC = () => {
                         type="button"
                         onClick={() => togglePreacher(teacher.name)}
                         className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition-colors duration-300 ${
-                          selected
-                            ? 'border-gold bg-gold/10'
-                            : 'border-white/10 bg-white/[0.03] hover:border-gold/40'
+                          selected ? 'border-gold bg-gold/10' : 'border-white/10 bg-white/[0.03] hover:border-gold/40'
                         }`}
                       >
                         <div
