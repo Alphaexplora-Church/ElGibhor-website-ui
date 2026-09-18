@@ -29,7 +29,7 @@ export default function Login() {
                 return;
             }
 
-            const token = data.session?.access_token;
+            const token = data.data?.session?.access_token ?? data.session?.access_token;
             if (token) {
                 localStorage.setItem('token', token);
             }
