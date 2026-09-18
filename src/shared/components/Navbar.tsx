@@ -37,7 +37,8 @@ const navData = [
       { title: 'Serve', sub: 'Make a Difference', path: '/engage#serve' },
       //{ title: 'Contact', sub: 'Let\'s Talk', path: '/engage#contact' }
     ]
-  }
+  },
+  { name: 'Library', path: '/library' },
 ];
 
 export const Navbar: React.FC = () => {

@@ -16,7 +16,6 @@ interface WordItem {
   duration: string;
   image: string;
   category: string;
-  preacher: string;
 }
 
 interface Episode {
@@ -128,15 +127,6 @@ const CATEGORIES = [
 const itemsPerPage = 8;
 const totalWordItems = 80;
 
-const TEACHERS: Teacher[] = [
-  { name: 'Pastor Mike', role: 'Lead Pastor', sermonCount: 42, image: thumbnails[0] },
-  { name: 'Pastor Anna', role: 'Associate Pastor', sermonCount: 18, image: thumbnails[1] },
-  { name: 'Pastor Ruben', role: 'Youth Pastor', sermonCount: 12, image: thumbnails[2] },
-  { name: 'Pastor Grace', role: "Women's Ministry Pastor", sermonCount: 15, image: thumbnails[3] },
-  { name: 'Pastor Daniel', role: 'Associate Pastor', sermonCount: 20, image: thumbnails[4] },
-  { name: 'Pastor Elijah', role: 'Youth Pastor', sermonCount: 9, image: thumbnails[0] },
-];
-
 const wordItems: WordItem[] = Array.from({ length: totalWordItems }, (_, i) => {
   const sermonDate = new Date('2026-08-24');
   sermonDate.setDate(sermonDate.getDate() - i * 7);
@@ -148,7 +138,6 @@ const wordItems: WordItem[] = Array.from({ length: totalWordItems }, (_, i) => {
     duration: durations[i % durations.length],
     image: thumbnails[i % thumbnails.length],
     category: CATEGORIES[i % CATEGORIES.length].name,
-    preacher: TEACHERS[i % TEACHERS.length].name,
   };
 });
 
@@ -192,6 +181,12 @@ const SERIES_LIST: SeriesItem[] = [
     blurb: 'A single teaching on generosity as posture rather than obligation.',
     episodes: [{ title: 'Open Hands', date: 'Jun 2026', duration: '35 min', image: thumbnails[4] }],
   },
+];
+
+const TEACHERS: Teacher[] = [
+  { name: 'Pastor Mike', role: 'Lead Pastor', sermonCount: 42, image: thumbnails[0] },
+  { name: 'Pastor Anna', role: 'Associate Pastor', sermonCount: 18, image: thumbnails[1] },
+  { name: 'Pastor Ruben', role: 'Youth Pastor', sermonCount: 12, image: thumbnails[2] },
 ];
 
 const TABS: { id: Tab; label: string }[] = [
@@ -250,10 +245,9 @@ export const Library: React.FC = () => {
     else if (info.offset.x >= SWIPE_THRESHOLD) goPrev();
   };
 
-  // --- Archive controls: tab, category, preacher, search, pagination ---
+  // --- Archive controls: tab, category, search, pagination ---
   const [activeTab, setActiveTab] = useState<Tab>('sermons');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [activePreachers, setActivePreachers] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -266,12 +260,6 @@ export const Library: React.FC = () => {
     setCategoryOpen(false);
     setCategorySearch('');
   };
-
-  const togglePreacher = (name: string) => {
-    setActivePreachers((prev) => (prev.includes(name) ? prev.filter((p) => p !== name) : [...prev, name]));
-  };
-
-  const clearPreachers = () => setActivePreachers([]);
 
   const filteredCategories = useMemo(() => {
     const query = categorySearch.trim().toLowerCase();
@@ -325,12 +313,6 @@ export const Library: React.FC = () => {
     () => (activeCategory ? SERIES_LIST.filter((s) => s.category === activeCategory) : SERIES_LIST),
     [activeCategory]
   );
-
-  // Sermons matching the preacher(s) selected on the Teachers tab.
-  const teacherFilteredSermons = useMemo(() => {
-    if (activePreachers.length === 0) return [];
-    return wordItems.filter((item) => activePreachers.includes(item.preacher));
-  }, [activePreachers]);
 
   // --- Player / series / detail modals ---
   const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
@@ -467,9 +449,10 @@ export const Library: React.FC = () => {
         </div>
 
         {/* search (sermons tab only) */}
-        {activeTab === 'sermons' && (
-          <div className="flex justify-center mb-6">
-            <div className="relative w-full max-w-md">
+        {activeTab !== 'teachers' && (
+          <div className="flex justify-center mb-12">
+            <div className="relative w-full max-w-xs" ref={categoryDropdownRef}>
+        
               <svg className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" />
                 <path strokeLinecap="round" d="M21 21l-4.3-4.3" />
@@ -486,9 +469,9 @@ export const Library: React.FC = () => {
         )}
 
         {/* category dropdown, searchable — built for a long list of topics (sermons + series tabs) */}
-        {activeTab !== 'teachers' && (
-          <div className="flex justify-center mb-12">
-            <div className="relative w-full max-w-xs" ref={categoryDropdownRef}>
+        {activeTab === 'sermons' && (
+          <div className="flex justify-center mb-6">
+            <div className="relative w-full max-w-md">
               <button
                 type="button"
                 onClick={() => setCategoryOpen((prev) => !prev)}
@@ -572,7 +555,7 @@ export const Library: React.FC = () => {
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeTab + currentPage + searchQuery + (activeCategory ?? '') + activePreachers.join(',')}
+            key={activeTab + currentPage + searchQuery + (activeCategory ?? '')}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -710,110 +693,19 @@ export const Library: React.FC = () => {
             )}
 
             {activeTab === 'teachers' && (
-              <div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {TEACHERS.map((teacher) => {
-                    const selected = activePreachers.includes(teacher.name);
-                    return (
-                      <button
-                        key={teacher.name}
-                        type="button"
-                        onClick={() => togglePreacher(teacher.name)}
-                        className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition-colors duration-300 ${
-                          selected ? 'border-gold bg-gold/10' : 'border-white/10 bg-white/[0.03] hover:border-gold/40'
-                        }`}
-                      >
-                        <div
-                          className={`relative h-16 w-16 shrink-0 rounded-full overflow-hidden ring-2 transition-colors duration-300 ${
-                            selected ? 'ring-gold' : 'ring-gold/60'
-                          }`}
-                        >
-                          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${teacher.image})` }} />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-heading font-black uppercase tracking-tight text-white text-base">{teacher.name}</h4>
-                          <p className="text-gold text-xs font-bold uppercase tracking-widest mt-0.5">{teacher.role}</p>
-                          <p className="text-gray-400 text-xs mt-1">{teacher.sermonCount} messages</p>
-                        </div>
-                        <span
-                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                            selected ? 'bg-gold border-gold' : 'border-white/20'
-                          }`}
-                        >
-                          {selected && (
-                            <svg className="w-3 h-3 text-royal-purple-dark" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {activePreachers.length > 0 && (
-                  <div className="mt-12">
-                    <div className="flex items-center justify-between mb-6">
-                      <h3 className="font-heading font-black uppercase tracking-tight text-white text-lg">
-                        Sermons by {activePreachers.join(', ')}
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={clearPreachers}
-                        className="text-xs font-bold uppercase tracking-widest text-gold hover:text-gold-light transition-colors"
-                      >
-                        Clear
-                      </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {TEACHERS.map((teacher) => (
+                  <div key={teacher.name} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                    <div className="relative h-16 w-16 shrink-0 rounded-full overflow-hidden ring-2 ring-gold/60">
+                      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${teacher.image})` }} />
                     </div>
-
-                    {teacherFilteredSermons.length === 0 ? (
-                      <p className="text-center text-gray-400 py-16">No sermons found for the selected preacher(s).</p>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {teacherFilteredSermons.map((item) => (
-                          <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.35)] flex flex-col">
-                            <div
-                              onClick={() =>
-                                setSeeMoreSermon({
-                                  id: item.id,
-                                  title: item.title,
-                                  date: item.date,
-                                  overview: 'Placeholder overview. Replace this with the real sermon description once the content is ready.',
-                                  image: item.image,
-                                })
-                              }
-                              className="relative h-56 bg-cover bg-center w-full overflow-hidden cursor-pointer"
-                              style={{ backgroundImage: `url(${item.image})` }}
-                            >
-                              <span className="absolute top-3 left-3 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold">
-                                {item.category}
-                              </span>
-                            </div>
-                            <div className="flex flex-col items-center py-4 px-4 gap-1 bg-white">
-                              <h3 className="text-royal-purple-dark font-bold text-sm text-center">{item.title}</h3>
-                              <p className="text-gray-500 text-xs">{item.duration} • {item.date}</p>
-                              <p className="text-gray-400 text-[11px]">{item.preacher}</p>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  openPlayer({
-                                    title: item.title,
-                                    date: item.date,
-                                    duration: item.duration,
-                                    overview: 'Placeholder overview. Replace this with the real sermon description once the content is ready.',
-                                  })
-                                }
-                                className="mt-2 px-5 py-1.5 rounded-full bg-royal-purple-dark text-white text-[11px] font-bold tracking-wide hover:bg-royal-purple-light transition-colors duration-300"
-                              >
-                                Watch Now
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <div>
+                      <h4 className="font-heading font-black uppercase tracking-tight text-white text-base">{teacher.name}</h4>
+                      <p className="text-gold text-xs font-bold uppercase tracking-widest mt-0.5">{teacher.role}</p>
+                      <p className="text-gray-400 text-xs mt-1">{teacher.sermonCount} messages</p>
+                    </div>
                   </div>
-                )}
+                ))}
               </div>
             )}
           </motion.div>
