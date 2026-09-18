@@ -29,6 +29,7 @@ const navData = [
     ]
   },
   { name: 'Give', path: '/give' },
+  {name: 'Library', path: '/library'},
   {
     name: 'Engage',
     path: '/engage',
