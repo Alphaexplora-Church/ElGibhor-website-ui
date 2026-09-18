@@ -1,38 +1,17 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-
-interface Sermon {
-  id: string;
-  title: string;
-  date: string;
-  overview: string;
-  image: string;
-}
-
-interface WordItem {
-  id: string;
-  title: string;
-  date: string;
-  duration: string;
-  image: string;
-  category: string;
-}
-
-interface Episode {
-  title: string;
-  date: string;
-  duration: string;
-  image: string;
-}
-
-interface SeriesItem {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  blurb: string;
-  episodes: Episode[];
-}
+import { useLibraryViewModel } from '../journeys/useLibraryViewModel';
+import type { LibraryTab } from '../journeys/useLibraryViewModel';
+import {
+  formatLongDate,
+  formatMonthYear,
+  journeyOverview,
+  journeyTopic,
+  messageCount,
+  partImage,
+  partLength,
+  toMediaEmbed,
+} from '../journeys/journeys.media';
 
 interface Teacher {
   name: string;
@@ -40,58 +19,6 @@ interface Teacher {
   sermonCount: number;
   image: string;
 }
-
-interface NowPlaying {
-  title: string;
-  date: string;
-  duration: string;
-  overview: string;
-}
-
-type Tab = 'sermons' | 'series' | 'teachers';
-
-const placeholderSermons: Sermon[] = [
-  {
-    id: '1',
-    title: 'Walking In Faith',
-    date: 'August 24, 2026',
-    overview:
-      'Placeholder overview. A short summary of the message goes here — the main scripture, the central idea, and the takeaway for the congregation.',
-    image: 'https://images.pexels.com/photos/11667919/pexels-photo-11667919.jpeg',
-  },
-  {
-    id: '2',
-    title: 'The Anchored Heart',
-    date: 'August 17, 2026',
-    overview:
-      'Placeholder overview. Replace this with the real description of the sermon, including the speaker and the series it belongs to.',
-    image: 'https://images.pexels.com/photos/14364672/pexels-photo-14364672.jpeg',
-  },
-  {
-    id: '3',
-    title: 'Grace That Moves',
-    date: 'August 10, 2026',
-    overview:
-      'Placeholder overview. This is where the sermon summary will sit once the real content is ready to be added in.',
-    image: 'https://images.pexels.com/photos/7697244/pexels-photo-7697244.jpeg',
-  },
-  {
-    id: '4',
-    title: 'Rooted & Unshaken',
-    date: 'August 3, 2026',
-    overview:
-      'Placeholder overview. A brief, compelling summary of the sermon message will replace this placeholder text.',
-    image: 'https://images.pexels.com/photos/34683153/pexels-photo-34683153.jpeg',
-  },
-  {
-    id: '5',
-    title: 'Called By Name',
-    date: 'July 27, 2026',
-    overview:
-      'Placeholder overview. Final placeholder slot — swap in the real title, date, thumbnail, and overview text.',
-    image: 'https://images.pexels.com/photos/11140399/pexels-photo-11140399.jpeg',
-  },
-];
 
 const AUTOPLAY_DELAY = 4000;
 const SWIPE_THRESHOLD = 80;
@@ -102,85 +29,10 @@ const variants = {
   exit: (direction: number) => ({ opacity: 0, x: direction > 0 ? -60 : 60, scale: 1.02 }),
 };
 
-const durations = ['32 min', '38 min', '41 min', '45 min', '52 min'];
 const thumbnails = [
   'https://images.pexels.com/photos/8468470/pexels-photo-8468470.jpeg',
   'https://images.pexels.com/photos/34352434/pexels-photo-34352434.jpeg',
   'https://images.pexels.com/photos/2170473/pexels-photo-2170473.jpeg',
-  'https://images.pexels.com/photos/208216/pexels-photo-208216.jpeg',
-  'https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg',
-];
-
-// Categories replace the old flat search-only list. Counts are illustrative —
-// wire these up to real tallies once content is final.
-const CATEGORIES = [
-  { name: 'Faith', count: 24 },
-  { name: 'Prayer', count: 16 },
-  { name: 'Identity', count: 14 },
-  { name: 'Family', count: 12 },
-  { name: 'Generosity', count: 9 },
-  { name: 'Healing', count: 8 },
-  { name: 'Hope', count: 7 },
-  { name: 'Worship', count: 6 },
-];
-
-const itemsPerPage = 8;
-const totalWordItems = 80;
-
-const wordItems: WordItem[] = Array.from({ length: totalWordItems }, (_, i) => {
-  const sermonDate = new Date('2026-08-24');
-  sermonDate.setDate(sermonDate.getDate() - i * 7);
-
-  return {
-    id: `word-${i + 1}`,
-    title: `Sermon Title ${i + 1}`,
-    date: sermonDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-    duration: durations[i % durations.length],
-    image: thumbnails[i % thumbnails.length],
-    category: CATEGORIES[i % CATEGORIES.length].name,
-  };
-});
-
-const SERIES_LIST: SeriesItem[] = [
-  {
-    id: 'ser-1',
-    title: 'Kingdom Culture',
-    category: 'Faith',
-    image: thumbnails[0],
-    blurb: 'A short arc on what it looks like to carry Kingdom values into ordinary weeks.',
-    episodes: [
-      { title: 'Kingdom Culture: Part One', date: 'Aug 2026', duration: '42 min', image: thumbnails[0] },
-      { title: 'Kingdom Culture: Part Two', date: 'Aug 2026', duration: '39 min', image: thumbnails[1] },
-      { title: 'Kingdom Culture: Part Three', date: 'Aug 2026', duration: '44 min', image: thumbnails[2] },
-    ],
-  },
-  {
-    id: 'ser-2',
-    title: 'Steady Hands',
-    category: 'Hope',
-    image: thumbnails[3],
-    blurb: 'One message on staying grounded when the outlook is uncertain.',
-    episodes: [{ title: 'Steady Hands', date: 'Jul 2026', duration: '41 min', image: thumbnails[3] }],
-  },
-  {
-    id: 'ser-3',
-    title: 'The Upper Room',
-    category: 'Identity',
-    image: thumbnails[2],
-    blurb: 'A close reading of the final conversations before the cross, told in three parts.',
-    episodes: [
-      { title: 'The Upper Room: Part One', date: 'Jul 2026', duration: '48 min', image: thumbnails[2] },
-      { title: 'The Upper Room: Part Two', date: 'Jul 2026', duration: '44 min', image: thumbnails[4] },
-    ],
-  },
-  {
-    id: 'ser-4',
-    title: 'Open Hands',
-    category: 'Generosity',
-    image: thumbnails[4],
-    blurb: 'A single teaching on generosity as posture rather than obligation.',
-    episodes: [{ title: 'Open Hands', date: 'Jun 2026', duration: '35 min', image: thumbnails[4] }],
-  },
 ];
 
 const TEACHERS: Teacher[] = [
@@ -189,7 +41,7 @@ const TEACHERS: Teacher[] = [
   { name: 'Pastor Ruben', role: 'Youth Pastor', sermonCount: 12, image: thumbnails[2] },
 ];
 
-const TABS: { id: Tab; label: string }[] = [
+const TABS: { id: LibraryTab; label: string }[] = [
   { id: 'sermons', label: 'All Sermons' },
   { id: 'series', label: 'Series' },
   { id: 'teachers', label: 'Teachers' },
@@ -209,13 +61,16 @@ const getPaginationRange = (current: number, total: number) => {
 };
 
 export const Library: React.FC = () => {
+  const vm = useLibraryViewModel();
+
   const [[activeIndex, direction], setSlide] = useState<[number, number]>([0, 0]);
-  const total = placeholderSermons.length;
-  const current = placeholderSermons[activeIndex];
+  const total = vm.heroJourneys.length;
+  const current = vm.heroJourneys[activeIndex] ?? null;
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const goTo = useCallback(
     (nextIndex: number, dir: number) => {
+      if (total === 0) return;
       const wrapped = ((nextIndex % total) + total) % total;
       setSlide([wrapped, dir]);
     },
@@ -233,39 +88,39 @@ export const Library: React.FC = () => {
   );
 
   useEffect(() => {
+    if (activeIndex > 0 && activeIndex >= total) setSlide([0, 0]);
+  }, [activeIndex, total]);
+
+  useEffect(() => {
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => goTo(activeIndex + 1, 1), AUTOPLAY_DELAY);
+    if (total > 1) {
+      timerRef.current = setInterval(() => goTo(activeIndex + 1, 1), AUTOPLAY_DELAY);
+    }
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [activeIndex, goTo]);
+  }, [activeIndex, goTo, total]);
 
   const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x <= -SWIPE_THRESHOLD) goNext();
     else if (info.offset.x >= SWIPE_THRESHOLD) goPrev();
   };
 
-  // --- Archive controls: tab, category, search, pagination ---
-  const [activeTab, setActiveTab] = useState<Tab>('sermons');
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [categorySearch, setCategorySearch] = useState('');
   const categoryDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const selectCategory = (name: string | null) => {
-    setActiveCategory(name);
-    setCurrentPage(1);
+    vm.selectCategory(name);
     setCategoryOpen(false);
     setCategorySearch('');
   };
 
   const filteredCategories = useMemo(() => {
     const query = categorySearch.trim().toLowerCase();
-    if (!query) return CATEGORIES;
-    return CATEGORIES.filter((c) => c.name.toLowerCase().includes(query));
-  }, [categorySearch]);
+    if (!query) return vm.categoryCounts;
+    return vm.categoryCounts.filter((c) => c.name.toLowerCase().includes(query));
+  }, [categorySearch, vm.categoryCounts]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -278,145 +133,106 @@ export const Library: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeTab]);
+  const paginationRange = useMemo(() => getPaginationRange(vm.currentPage, vm.totalPages), [vm.currentPage, vm.totalPages]);
 
-  const filteredWordItems = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    return wordItems.filter((item) => {
-      const matchesQuery = !query || item.title.toLowerCase().includes(query);
-      const matchesCategory = !activeCategory || item.category === activeCategory;
-      return matchesQuery && matchesCategory;
-    });
-  }, [searchQuery, activeCategory]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredWordItems.length / itemsPerPage));
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, activeCategory]);
-
-  const pageItems = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredWordItems.slice(start, start + itemsPerPage);
-  }, [filteredWordItems, currentPage]);
-
-  const paginationRange = useMemo(() => getPaginationRange(currentPage, totalPages), [currentPage, totalPages]);
-
-  const goToPage = useCallback(
-    (page: number) => setCurrentPage(Math.max(1, Math.min(totalPages, page))),
-    [totalPages]
-  );
-
-  const filteredSeries = useMemo(
-    () => (activeCategory ? SERIES_LIST.filter((s) => s.category === activeCategory) : SERIES_LIST),
-    [activeCategory]
-  );
-
-  // --- Player / series / detail modals ---
-  const [nowPlaying, setNowPlaying] = useState<NowPlaying | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [seeMoreSermon, setSeeMoreSermon] = useState<Sermon | null>(null);
-  const [openSeries, setOpenSeries] = useState<SeriesItem | null>(null);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  const openPlayer = (sermon: NowPlaying) => {
-    setNowPlaying(sermon);
-    setPlaying(false);
-  };
-
-  const closePlayer = () => {
-    setNowPlaying(null);
-    setPlaying(false);
-  };
-
-  const handleSeriesClick = (series: SeriesItem) => {
-    if (series.episodes.length === 1) {
-      const ep = series.episodes[0];
-      openPlayer({ title: ep.title, date: ep.date, duration: ep.duration, overview: series.blurb });
-    } else {
-      setOpenSeries(series);
-    }
-  };
+  const embed = vm.nowPlaying ? toMediaEmbed(vm.nowPlaying.part.mediaUrl, vm.nowPlaying.part.mediaType) : null;
 
   return (
     <div className="bg-[var(--color-background-dark)] w-full min-h-screen pt-16 lg:pt-24">
       {/* HERO */}
       <section className="relative w-full h-[80vh] min-h-[560px] overflow-hidden">
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          <motion.div
-            key={current.id}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.15}
-            onDragEnd={handleDragEnd}
-            className="absolute inset-0 cursor-grab active:cursor-grabbing"
-          >
-            <div className="absolute inset-0 bg-cover bg-center select-none" style={{ backgroundImage: `url(${current.image})` }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background-dark)] via-[var(--color-background-dark)]/40 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background-dark)]/90 via-[var(--color-background-dark)]/20 to-transparent" />
+        {current ? (
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              key={current.journeyId}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.15}
+              onDragEnd={handleDragEnd}
+              className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            >
+              {current.thumbnailUrl && (
+                <div className="absolute inset-0 bg-cover bg-center select-none" style={{ backgroundImage: `url(${current.thumbnailUrl})` }} />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background-dark)] via-[var(--color-background-dark)]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background-dark)]/90 via-[var(--color-background-dark)]/20 to-transparent" />
 
-            <div className="relative z-10 h-full flex flex-col justify-end max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pb-16 lg:pb-24">
-              <h1 className="font-heading font-black uppercase tracking-tight text-white text-4xl sm:text-6xl lg:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)] max-w-3xl">
-                {current.title}
-              </h1>
-              <div className="flex items-center gap-3 mt-4 text-sm sm:text-base font-medium text-gray-200">
-                <span className="text-gold font-bold">{current.date}</span>
-                <span className="w-1 h-1 rounded-full bg-gray-400" />
-                <span className="text-gray-300">Sermon</span>
-              </div>
-              <p className="mt-4 text-gray-300 text-sm sm:text-base max-w-xl leading-relaxed line-clamp-3">{current.overview}</p>
+              <div className="relative z-10 h-full flex flex-col justify-end max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pb-16 lg:pb-24">
+                <h1 className="font-heading font-black uppercase tracking-tight text-white text-4xl sm:text-6xl lg:text-7xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)] max-w-3xl">
+                  {current.title}
+                </h1>
+                <div className="flex items-center gap-3 mt-4 text-sm sm:text-base font-medium text-gray-200">
+                  <span className="text-gold font-bold">{formatLongDate(current.createdAt)}</span>
+                  <span className="w-1 h-1 rounded-full bg-gray-400" />
+                  <span className="text-gray-300">{journeyTopic(current)}</span>
+                </div>
+                <p className="mt-4 text-gray-300 text-sm sm:text-base max-w-xl leading-relaxed line-clamp-3">{journeyOverview(current)}</p>
 
-              <div className="flex items-center gap-4 mt-8">
-                <button
-                  type="button"
-                  onClick={() => openPlayer({ title: current.title, date: current.date, duration: '45 min', overview: current.overview })}
-                  className="flex items-center justify-center gap-2 h-12 sm:h-14 px-7 sm:px-9 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_20px_rgba(239,191,4,0.35)]"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  Play
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSeeMoreSermon(current)}
-                  className="flex items-center justify-center gap-2 h-12 sm:h-14 px-6 sm:px-8 rounded-full bg-white/10 border border-white/20 text-white font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all duration-300 backdrop-blur-md"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9" />
-                    <path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
-                  </svg>
-                  See More
-                </button>
+                <div className="flex items-center gap-4 mt-8">
+                  <button
+                    type="button"
+                    onClick={() => vm.playJourney(current)}
+                    className="flex items-center justify-center gap-2 h-12 sm:h-14 px-7 sm:px-9 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_20px_rgba(239,191,4,0.35)]"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    Play
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => vm.openSeeMore(current)}
+                    className="flex items-center justify-center gap-2 h-12 sm:h-14 px-6 sm:px-8 rounded-full bg-white/10 border border-white/20 text-white font-bold tracking-wide hover:bg-white/20 hover:border-white/40 transition-all duration-300 backdrop-blur-md"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="9" />
+                      <path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
+                    </svg>
+                    See More
+                  </button>
+                </div>
               </div>
+            </motion.div>
+          </AnimatePresence>
+        ) : (
+          <div className="relative z-10 h-full flex flex-col justify-end max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pb-16 lg:pb-24">
+            <h1 className="font-heading font-black uppercase tracking-tight text-white text-4xl sm:text-6xl lg:text-7xl max-w-3xl">
+              The Library
+            </h1>
+            <p className="mt-4 text-gray-300 text-sm sm:text-base max-w-xl leading-relaxed">
+              {vm.isLoadingCatalog ? 'Loading sermons...' : vm.catalogError ?? 'No sermons have been published yet.'}
+            </p>
+          </div>
+        )}
+
+        {total > 1 && (
+          <>
+            <button type="button" onClick={goPrev} aria-label="Previous sermon" className="hidden sm:flex items-center justify-center absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/30 border border-white/10 text-white hover:bg-black/50 backdrop-blur-md transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button type="button" onClick={goNext} aria-label="Next sermon" className="hidden sm:flex items-center justify-center absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/30 border border-white/10 text-white hover:bg-black/50 backdrop-blur-md transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+              {vm.heroJourneys.map((journey, index) => (
+                <button
+                  key={journey.journeyId}
+                  type="button"
+                  aria-label={`Go to sermon ${index + 1}`}
+                  onClick={() => goToIndex(index)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-gold' : 'w-4 bg-white/30 hover:bg-white/50'}`}
+                />
+              ))}
             </div>
-          </motion.div>
-        </AnimatePresence>
-
-        <button type="button" onClick={goPrev} aria-label="Previous sermon" className="hidden sm:flex items-center justify-center absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/30 border border-white/10 text-white hover:bg-black/50 backdrop-blur-md transition-colors">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        <button type="button" onClick={goNext} aria-label="Next sermon" className="hidden sm:flex items-center justify-center absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-black/30 border border-white/10 text-white hover:bg-black/50 backdrop-blur-md transition-colors">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-        </button>
-
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-          {placeholderSermons.map((sermon, index) => (
-            <button
-              key={sermon.id}
-              type="button"
-              aria-label={`Go to sermon ${index + 1}`}
-              onClick={() => goToIndex(index)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-gold' : 'w-4 bg-white/30 hover:bg-white/50'}`}
-            />
-          ))}
-        </div>
+          </>
+        )}
       </section>
 
       {/* ARCHIVE */}
@@ -437,9 +253,9 @@ export const Library: React.FC = () => {
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => vm.setActiveTab(tab.id)}
                 className={`px-5 py-2.5 rounded-full text-sm font-bold tracking-wide transition-colors duration-300 ${
-                  activeTab === tab.id ? 'bg-gold text-royal-purple-dark' : 'text-gray-300 hover:text-white'
+                  vm.activeTab === tab.id ? 'bg-gold text-royal-purple-dark' : 'text-gray-300 hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -449,18 +265,18 @@ export const Library: React.FC = () => {
         </div>
 
         {/* search (sermons tab only) */}
-        {activeTab !== 'teachers' && (
+        {vm.activeTab !== 'teachers' && (
           <div className="flex justify-center mb-12">
             <div className="relative w-full max-w-xs" ref={categoryDropdownRef}>
-        
+
               <svg className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" />
                 <path strokeLinecap="round" d="M21 21l-4.3-4.3" />
               </svg>
               <input
                 type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={vm.searchQuery}
+                onChange={(e) => vm.setSearchQuery(e.target.value)}
                 placeholder="Search sermons by title..."
                 className="w-full h-12 pl-12 pr-4 rounded-full bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold/60 transition-colors"
               />
@@ -469,19 +285,19 @@ export const Library: React.FC = () => {
         )}
 
         {/* category dropdown, searchable — built for a long list of topics (sermons + series tabs) */}
-        {activeTab === 'sermons' && (
+        {vm.activeTab === 'sermons' && (
           <div className="flex justify-center mb-6">
             <div className="relative w-full max-w-md">
               <button
                 type="button"
                 onClick={() => setCategoryOpen((prev) => !prev)}
                 className={`flex w-full items-center justify-between h-12 px-5 rounded-full border text-sm font-bold tracking-wide transition-colors duration-300 ${
-                  activeCategory ? 'bg-royal-purple-dark border-royal-purple-dark text-white' : 'bg-white/5 border-white/10 text-gray-300 hover:border-gold/40'
+                  vm.activeCategory ? 'bg-royal-purple-dark border-royal-purple-dark text-white' : 'bg-white/5 border-white/10 text-gray-300 hover:border-gold/40'
                 }`}
               >
-                <span className="truncate">{activeCategory ?? 'Filter by topic'}</span>
+                <span className="truncate">{vm.activeCategory ?? 'Filter by topic'}</span>
                 <svg
-                  className={`w-4 h-4 shrink-0 ml-2 transition-transform duration-300 ${categoryOpen ? 'rotate-180' : ''} ${activeCategory ? 'text-white' : 'text-gray-500'}`}
+                  className={`w-4 h-4 shrink-0 ml-2 transition-transform duration-300 ${categoryOpen ? 'rotate-180' : ''} ${vm.activeCategory ? 'text-white' : 'text-gray-500'}`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth={2}
@@ -518,7 +334,7 @@ export const Library: React.FC = () => {
                     </div>
 
                     <div className="max-h-72 overflow-y-auto">
-                      {activeCategory && (
+                      {vm.activeCategory && (
                         <button
                           type="button"
                           onClick={() => selectCategory(null)}
@@ -537,7 +353,7 @@ export const Library: React.FC = () => {
                             type="button"
                             onClick={() => selectCategory(cat.name)}
                             className={`flex w-full items-center justify-between px-5 py-3 text-sm transition-colors hover:bg-white/5 ${
-                              activeCategory === cat.name ? 'text-gold' : 'text-gray-300'
+                              vm.activeCategory === cat.name ? 'text-gold' : 'text-gray-300'
                             }`}
                           >
                             <span>{cat.name}</span>
@@ -555,41 +371,58 @@ export const Library: React.FC = () => {
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeTab + currentPage + searchQuery + (activeCategory ?? '')}
+            key={vm.activeTab + vm.currentPage + (vm.activeCategory ?? '')}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35, ease: 'easeInOut' }}
           >
-            {activeTab === 'sermons' && (
+            {vm.activeTab === 'sermons' && (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {pageItems.length === 0 && (
+                  {vm.showListSkeleton &&
+                    [0, 1, 2, 3].map((i) => (
+                      <div key={i} className="bg-white/5 rounded-2xl overflow-hidden flex flex-col animate-pulse">
+                        <div className="h-72 sm:h-80 w-full bg-white/5" />
+                        <div className="flex flex-col items-center py-4 px-4 gap-2">
+                          <div className="h-4 w-2/3 rounded bg-white/10" />
+                          <div className="h-3 w-1/3 rounded bg-white/10" />
+                        </div>
+                      </div>
+                    ))}
+
+                  {!vm.showListSkeleton && vm.listError && (
+                    <div className="col-span-full text-center py-16">
+                      <p className="text-gray-400">{vm.listError}</p>
+                      <button
+                        type="button"
+                        onClick={vm.retry}
+                        className="mt-4 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-gray-300 hover:bg-white/10 transition-colors"
+                      >
+                        Try again
+                      </button>
+                    </div>
+                  )}
+
+                  {!vm.showListSkeleton && !vm.listError && vm.pageItems.length === 0 && (
                     <div className="col-span-full text-center text-gray-400 py-16">
                       Nothing matches that search or topic yet.
                     </div>
                   )}
-                  {pageItems.map((item) => {
-                    const isHovered = hoveredCard === item.id;
+
+                  {!vm.showListSkeleton && !vm.listError && vm.pageItems.map((item) => {
+                    const isHovered = hoveredCard === item.journeyId;
                     return (
-                      <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.35)] flex flex-col cursor-pointer">
+                      <div key={item.journeyId} className="bg-white rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.35)] flex flex-col cursor-pointer">
                         <div
-                          onMouseEnter={() => setHoveredCard(item.id)}
+                          onMouseEnter={() => setHoveredCard(item.journeyId)}
                           onMouseLeave={() => setHoveredCard(null)}
-                          onClick={() =>
-                            setSeeMoreSermon({
-                              id: item.id,
-                              title: item.title,
-                              date: item.date,
-                              overview: 'Placeholder overview. Replace this with the real sermon description once the content is ready.',
-                              image: item.image,
-                            })
-                          }
-                          className="relative h-72 sm:h-80 bg-cover bg-center w-full overflow-hidden"
-                          style={{ backgroundImage: `url(${item.image})` }}
+                          onClick={() => vm.openSeeMore(item)}
+                          className="relative h-72 sm:h-80 bg-cover bg-center w-full overflow-hidden bg-royal-purple-dark"
+                          style={item.thumbnailUrl ? { backgroundImage: `url(${item.thumbnailUrl})` } : undefined}
                         >
                           <span className="absolute top-3 left-3 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold">
-                            {item.category}
+                            {journeyTopic(item)}
                           </span>
                           <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 flex items-center justify-center ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
                             <span className={`flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/60 border border-white/20 text-white font-bold text-sm backdrop-blur-md transition-all duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-2'}`}>
@@ -603,17 +436,12 @@ export const Library: React.FC = () => {
 
                         <div className="flex flex-col items-center py-4 px-4 gap-1.5 bg-white z-10">
                           <h3 className="text-royal-purple-dark font-bold text-lg text-center">{item.title}</h3>
-                          <p className="text-gray-500 text-xs">{item.duration} • {item.date}</p>
+                          <p className="text-gray-500 text-xs">{messageCount(item.totalPublishedParts)} • {formatLongDate(item.createdAt)}</p>
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              openPlayer({
-                                title: item.title,
-                                date: item.date,
-                                duration: item.duration,
-                                overview: 'Placeholder overview. Replace this with the real sermon description once the content is ready.',
-                              });
+                              vm.playJourney(item);
                             }}
                             className="mt-2 px-6 py-2 rounded-full bg-royal-purple-dark text-white text-xs font-bold tracking-wide hover:bg-royal-purple-light transition-colors duration-300"
                           >
@@ -625,9 +453,9 @@ export const Library: React.FC = () => {
                   })}
                 </div>
 
-                {pageItems.length > 0 && (
+                {!vm.showListSkeleton && !vm.listError && vm.pageItems.length > 0 && (
                   <div className="flex items-center justify-center gap-2 mt-12 flex-wrap">
-                    <button type="button" onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1} aria-label="Previous page" className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors">
+                    <button type="button" onClick={() => vm.goToPage(vm.currentPage - 1)} disabled={vm.currentPage === 1} aria-label="Previous page" className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
                     </button>
                     {paginationRange.map((page, idx) =>
@@ -637,17 +465,17 @@ export const Library: React.FC = () => {
                         <button
                           key={page}
                           type="button"
-                          onClick={() => goToPage(page as number)}
+                          onClick={() => vm.goToPage(page as number)}
                           aria-label={`Go to page ${page}`}
                           className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-bold transition-colors duration-300 ${
-                            page === currentPage ? 'bg-gold text-royal-purple-dark' : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'
+                            page === vm.currentPage ? 'bg-gold text-royal-purple-dark' : 'bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10'
                           }`}
                         >
                           {page}
                         </button>
                       )
                     )}
-                    <button type="button" onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages} aria-label="Next page" className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors">
+                    <button type="button" onClick={() => vm.goToPage(vm.currentPage + 1)} disabled={vm.currentPage === vm.totalPages} aria-label="Next page" className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                     </button>
                   </div>
@@ -655,29 +483,37 @@ export const Library: React.FC = () => {
               </>
             )}
 
-            {activeTab === 'series' && (
+            {vm.activeTab === 'series' && (
               <div className="flex flex-col gap-4">
-                {filteredSeries.length === 0 ? (
+                {vm.isLoadingCatalog ? (
+                  [0, 1, 2].map((i) => (
+                    <div key={i} className="h-44 sm:h-40 rounded-2xl border border-white/10 bg-white/[0.03] animate-pulse" />
+                  ))
+                ) : vm.catalogError ? (
+                  <p className="text-center text-gray-400 py-16">{vm.catalogError}</p>
+                ) : vm.filteredSeries.length === 0 ? (
                   <p className="text-center text-gray-400 py-16">No series in this topic yet.</p>
                 ) : (
-                  filteredSeries.map((series) => (
+                  vm.filteredSeries.map((series) => (
                     <button
-                      key={series.id}
+                      key={series.journeyId}
                       type="button"
-                      onClick={() => handleSeriesClick(series)}
+                      onClick={() => vm.openJourney(series)}
                       className="group flex flex-col sm:flex-row items-stretch gap-0 sm:gap-6 rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden text-left hover:border-gold/40 transition-colors duration-300"
                     >
                       <div className="relative h-44 sm:h-auto sm:w-56 shrink-0 overflow-hidden">
-                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${series.image})` }} />
+                        {series.thumbnailUrl && (
+                          <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${series.thumbnailUrl})` }} />
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 sm:bg-gradient-to-r sm:from-transparent sm:via-transparent" />
                       </div>
 
                       <div className="flex flex-1 flex-col justify-center p-5 sm:py-6 sm:pr-6">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-gold mb-1">{series.category}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-gold mb-1">{journeyTopic(series)}</span>
                         <h3 className="font-heading font-black uppercase tracking-tight text-white text-xl sm:text-2xl">{series.title}</h3>
-                        <p className="text-gray-400 text-sm mt-2 leading-relaxed max-w-lg">{series.blurb}</p>
+                        <p className="text-gray-400 text-sm mt-2 leading-relaxed max-w-lg line-clamp-3">{journeyOverview(series)}</p>
                         <span className="text-xs text-gray-500 mt-3">
-                          {series.episodes.length} {series.episodes.length === 1 ? 'message' : 'messages'}
+                          {messageCount(series.totalPublishedParts)}
                         </span>
                       </div>
 
@@ -692,7 +528,7 @@ export const Library: React.FC = () => {
               </div>
             )}
 
-            {activeTab === 'teachers' && (
+            {vm.activeTab === 'teachers' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {TEACHERS.map((teacher) => (
                   <div key={teacher.name} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
@@ -714,13 +550,13 @@ export const Library: React.FC = () => {
 
       {/* SERIES MODAL */}
       <AnimatePresence>
-        {openSeries && (
+        {vm.seriesTarget && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[150] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={() => setOpenSeries(null)}
+            onClick={vm.closeSeries}
           >
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
@@ -732,13 +568,13 @@ export const Library: React.FC = () => {
             >
               <div className="flex items-start justify-between p-6 sm:p-8">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gold">{openSeries.category}</span>
-                  <h2 className="font-heading font-black uppercase tracking-tight text-white text-2xl sm:text-3xl mt-1">{openSeries.title}</h2>
-                  <p className="text-gray-400 text-sm mt-2 max-w-md">{openSeries.blurb}</p>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gold">{journeyTopic(vm.seriesTarget)}</span>
+                  <h2 className="font-heading font-black uppercase tracking-tight text-white text-2xl sm:text-3xl mt-1">{vm.seriesTarget.title}</h2>
+                  <p className="text-gray-400 text-sm mt-2 max-w-md line-clamp-4">{journeyOverview(vm.seriesTarget)}</p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setOpenSeries(null)}
+                  onClick={vm.closeSeries}
                   aria-label="Close"
                   className="w-9 h-9 shrink-0 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
                 >
@@ -746,28 +582,41 @@ export const Library: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex flex-col gap-2 px-6 sm:px-8 pb-8">
-                {openSeries.episodes.map((episode, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => {
-                      setOpenSeries(null);
-                      openPlayer({ title: episode.title, date: episode.date, duration: episode.duration, overview: openSeries.blurb });
-                    }}
-                    className="group flex items-center gap-4 rounded-xl border border-white/10 hover:border-gold/40 p-3 text-left transition-colors"
-                  >
-                    <span className="font-heading font-black text-gold/60 group-hover:text-gold text-lg w-6 text-center shrink-0">{i + 1}</span>
-                    <div className="h-14 w-20 rounded-lg overflow-hidden shrink-0">
-                      <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${episode.image})` }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-white text-sm font-bold truncate">{episode.title}</h4>
-                      <p className="text-gray-500 text-xs mt-0.5">{episode.date} • {episode.duration}</p>
-                    </div>
-                    <svg className="w-4 h-4 text-gray-600 group-hover:text-gold transition-colors shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2 px-6 sm:px-8 pb-8 min-h-32">
+                {vm.isLoadingSeries &&
+                  [0, 1].map((i) => (
+                    <div key={i} className="h-20 rounded-xl border border-white/10 animate-pulse" />
+                  ))}
+
+                {!vm.isLoadingSeries && vm.seriesError && (
+                  <p className="text-center text-sm text-gray-400 py-8">{vm.seriesError}</p>
+                )}
+
+                {!vm.isLoadingSeries && !vm.seriesError && vm.seriesDetail?.parts.length === 0 && (
+                  <p className="text-center text-sm text-gray-500 py-8">No messages have been published in this series yet.</p>
+                )}
+
+                {!vm.isLoadingSeries && !vm.seriesError && vm.seriesDetail?.parts.map((part, i) => {
+                  const image = partImage(part, vm.seriesDetail?.journey ?? null);
+                  return (
+                    <button
+                      key={part.partId}
+                      type="button"
+                      onClick={() => vm.playPart(part)}
+                      className="group flex items-center gap-4 rounded-xl border border-white/10 hover:border-gold/40 p-3 text-left transition-colors"
+                    >
+                      <span className="font-heading font-black text-gold/60 group-hover:text-gold text-lg w-6 text-center shrink-0">{i + 1}</span>
+                      <div className="h-14 w-20 rounded-lg overflow-hidden shrink-0 bg-white/5">
+                        {image && <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${image})` }} />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-white text-sm font-bold truncate">{part.title}</h4>
+                        <p className="text-gray-500 text-xs mt-0.5">{formatMonthYear(part.createdAt)} • {partLength(part)}</p>
+                      </div>
+                      <svg className="w-4 h-4 text-gray-600 group-hover:text-gold transition-colors shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    </button>
+                  );
+                })}
               </div>
             </motion.div>
           </motion.div>
@@ -776,13 +625,13 @@ export const Library: React.FC = () => {
 
       {/* SEE MORE MODAL */}
       <AnimatePresence>
-        {seeMoreSermon && (
+        {vm.seeMoreJourney && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[150] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={() => setSeeMoreSermon(null)}
+            onClick={vm.closeSeeMore}
           >
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
@@ -792,11 +641,14 @@ export const Library: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="bg-[var(--color-background-dark)] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden"
             >
-              <div className="h-48 bg-cover bg-center relative" style={{ backgroundImage: `url(${seeMoreSermon.image})` }}>
+              <div
+                className="h-48 bg-cover bg-center relative bg-royal-purple-dark"
+                style={vm.seeMoreJourney.thumbnailUrl ? { backgroundImage: `url(${vm.seeMoreJourney.thumbnailUrl})` } : undefined}
+              >
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background-dark)] to-transparent" />
                 <button
                   type="button"
-                  onClick={() => setSeeMoreSermon(null)}
+                  onClick={vm.closeSeeMore}
                   aria-label="Close"
                   className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-black/40 border border-white/10 text-white hover:bg-black/60 transition-colors"
                 >
@@ -805,23 +657,24 @@ export const Library: React.FC = () => {
               </div>
 
               <div className="p-6 sm:p-8">
-                <h2 className="font-heading font-black uppercase tracking-tight text-white text-2xl sm:text-3xl">{seeMoreSermon.title}</h2>
+                <h2 className="font-heading font-black uppercase tracking-tight text-white text-2xl sm:text-3xl">{vm.seeMoreJourney.title}</h2>
                 <div className="flex items-center gap-3 mt-3 text-sm text-gray-300">
-                  <span className="text-gold font-bold">{seeMoreSermon.date}</span>
+                  <span className="text-gold font-bold">{formatLongDate(vm.seeMoreJourney.createdAt)}</span>
                   <span className="w-1 h-1 rounded-full bg-gray-500" />
-                  <span>45 min</span>
+                  <span>{messageCount(vm.seeMoreJourney.totalPublishedParts)}</span>
                 </div>
 
                 <div className="mt-6">
                   <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Overview</p>
-                  <p className="text-gray-300 text-sm leading-relaxed">{seeMoreSermon.overview}</p>
+                  <p className="text-gray-300 text-sm leading-relaxed">{journeyOverview(vm.seeMoreJourney)}</p>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => {
-                    setSeeMoreSermon(null);
-                    openPlayer({ title: seeMoreSermon.title, date: seeMoreSermon.date, duration: '45 min', overview: seeMoreSermon.overview });
+                    const journey = vm.seeMoreJourney;
+                    vm.closeSeeMore();
+                    if (journey) vm.playJourney(journey);
                   }}
                   className="flex items-center justify-center gap-2 h-12 px-7 mt-7 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300"
                 >
@@ -836,11 +689,11 @@ export const Library: React.FC = () => {
 
       {/* PLAYER */}
       <AnimatePresence>
-        {nowPlaying && (
+        {vm.nowPlaying && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[200] bg-black">
             <button
               type="button"
-              onClick={closePlayer}
+              onClick={vm.closePlayer}
               aria-label="Back"
               className="absolute top-6 left-6 z-30 flex items-center justify-center w-11 h-11 rounded-full bg-black/40 border border-white/10 text-white hover:bg-black/60 backdrop-blur-md transition-colors"
             >
@@ -848,19 +701,29 @@ export const Library: React.FC = () => {
             </button>
 
             <div className="absolute inset-0">
-              <iframe
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/Y-x0efG1seA"
-                title={nowPlaying.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              {embed?.kind === 'iframe' && (
+                <iframe
+                  className="w-full h-full"
+                  src={embed.src}
+                  title={vm.nowPlaying.part.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
+              {embed?.kind === 'image' && (
+                <div className="w-full h-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${embed.src})` }} />
+              )}
+              {embed?.kind === 'audio' && (
+                <div className="w-full h-full flex items-center justify-center px-6">
+                  <audio controls src={embed.src} className="w-full max-w-xl" />
+                </div>
+              )}
             </div>
 
-            {playing && <div onClick={() => setPlaying(false)} className="absolute inset-0 z-10 cursor-pointer" />}
+            {vm.playing && <div onClick={() => vm.setPlaying(false)} className="absolute inset-0 z-10 cursor-pointer" />}
 
             <AnimatePresence>
-              {!playing && (
+              {!vm.playing && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -870,22 +733,26 @@ export const Library: React.FC = () => {
                 >
                   <div className="max-w-xl px-6 sm:px-10 lg:px-16">
                     <h1 className="font-heading font-black uppercase tracking-tight text-white text-3xl sm:text-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
-                      {nowPlaying.title}
+                      {vm.nowPlaying.part.title}
                     </h1>
                     <div className="flex items-center gap-3 mt-4 text-sm sm:text-base font-medium text-gray-200">
-                      <span className="text-gold font-bold">{nowPlaying.date}</span>
+                      <span className="text-gold font-bold">{vm.nowPlaying.journey.title}</span>
                       <span className="w-1 h-1 rounded-full bg-gray-400" />
-                      <span className="text-gray-300">{nowPlaying.duration}</span>
+                      <span className="text-gray-300">{partLength(vm.nowPlaying.part) || formatLongDate(vm.nowPlaying.part.createdAt)}</span>
                     </div>
-                    <p className="mt-4 text-gray-300 text-sm sm:text-base leading-relaxed">{nowPlaying.overview}</p>
-                    <button
-                      type="button"
-                      onClick={() => setPlaying(true)}
-                      className="flex items-center justify-center gap-2 h-12 sm:h-14 px-7 sm:px-9 mt-8 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_20px_rgba(239,191,4,0.35)]"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                      Play
-                    </button>
+                    <p className="mt-4 text-gray-300 text-sm sm:text-base leading-relaxed whitespace-pre-line line-clamp-6">
+                      {vm.nowPlaying.part.readingText || journeyOverview(vm.nowPlaying.journey)}
+                    </p>
+                    {embed && (
+                      <button
+                        type="button"
+                        onClick={() => vm.setPlaying(true)}
+                        className="flex items-center justify-center gap-2 h-12 sm:h-14 px-7 sm:px-9 mt-8 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_20px_rgba(239,191,4,0.35)]"
+                      >
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                        Play
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               )}
