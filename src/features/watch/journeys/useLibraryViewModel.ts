@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { JourneyCategory, JourneyCategoryCount, JourneyDetail, JourneyPart, JourneySummary, NowPlaying } from './journeys.types';
 import { JourneysService } from './journeys.service';
 
-export type LibraryTab = 'sermons' | 'series' | 'teachers';
+export type LibraryTab = 'sermons' | 'series';
 
 export const ITEMS_PER_PAGE = 8;
 const CATALOG_LIMIT = 50;
@@ -183,7 +183,7 @@ export function useLibraryViewModel() {
     setIsLoadingSeries(false);
   };
 
-  const loadDetail = async (journey: JourneySummary, showSeriesModal: boolean): Promise<JourneyDetail | null> => {
+  const loadDetail = async (journey: JourneySummary): Promise<JourneyDetail | null> => {
     const cached = detailCache.current.get(journey.journeyId);
     if (cached) return cached;
 
@@ -193,7 +193,7 @@ export function useLibraryViewModel() {
     setSeriesError(null);
     setIsLoadingSeries(false);
 
-    if (showSeriesModal && journey.totalPublishedParts !== 1) {
+    if (journey.totalPublishedParts !== 1) {
       setSeriesTarget(journey);
       skeletonTimer.current = setTimeout(() => setIsLoadingSeries(true), SKELETON_DELAY);
     }
@@ -209,10 +209,8 @@ export function useLibraryViewModel() {
       if (seriesRequest.current !== journey.journeyId) return null;
       clearSkeletonTimer();
       setIsLoadingSeries(false);
-      if (showSeriesModal) {
-        setSeriesTarget(journey);
-        setSeriesError(errorMessage(err, 'Failed to load this series'));
-      }
+      setSeriesTarget(journey);
+      setSeriesError(errorMessage(err, 'Failed to load this series'));
       return null;
     }
   };
@@ -223,7 +221,7 @@ export function useLibraryViewModel() {
   };
 
   const openJourney = async (journey: JourneySummary) => {
-    const detail = await loadDetail(journey, true);
+    const detail = await loadDetail(journey);
     if (!detail) return;
     if (detail.parts.length === 1) {
       closeSeries();
@@ -232,17 +230,6 @@ export function useLibraryViewModel() {
     }
     setSeriesTarget(journey);
     setSeriesDetail(detail);
-  };
-
-  const playJourney = async (journey: JourneySummary) => {
-    const detail = await loadDetail(journey, false);
-    if (!detail) return;
-    if (detail.parts.length === 0) {
-      setSeriesTarget(journey);
-      setSeriesDetail(detail);
-      return;
-    }
-    openPlayer(detail.journey, detail.parts[0]);
   };
 
   const playPart = (part: JourneyPart) => {
@@ -282,7 +269,6 @@ export function useLibraryViewModel() {
     isLoadingSeries,
     seriesError,
     openJourney,
-    playJourney,
     closeSeries,
     playPart,
     seeMoreJourney,

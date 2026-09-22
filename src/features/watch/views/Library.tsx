@@ -13,13 +13,6 @@ import {
   toMediaEmbed,
 } from '../journeys/journeys.media';
 
-interface Teacher {
-  name: string;
-  role: string;
-  sermonCount: number;
-  image: string;
-}
-
 const AUTOPLAY_DELAY = 4000;
 const SWIPE_THRESHOLD = 80;
 
@@ -29,22 +22,9 @@ const variants = {
   exit: (direction: number) => ({ opacity: 0, x: direction > 0 ? -60 : 60, scale: 1.02 }),
 };
 
-const thumbnails = [
-  'https://images.pexels.com/photos/8468470/pexels-photo-8468470.jpeg',
-  'https://images.pexels.com/photos/34352434/pexels-photo-34352434.jpeg',
-  'https://images.pexels.com/photos/2170473/pexels-photo-2170473.jpeg',
-];
-
-const TEACHERS: Teacher[] = [
-  { name: 'Pastor Mike', role: 'Lead Pastor', sermonCount: 42, image: thumbnails[0] },
-  { name: 'Pastor Anna', role: 'Associate Pastor', sermonCount: 18, image: thumbnails[1] },
-  { name: 'Pastor Ruben', role: 'Youth Pastor', sermonCount: 12, image: thumbnails[2] },
-];
-
 const TABS: { id: LibraryTab; label: string }[] = [
   { id: 'sermons', label: 'All Sermons' },
   { id: 'series', label: 'Series' },
-  { id: 'teachers', label: 'Teachers' },
 ];
 
 const getPaginationRange = (current: number, total: number) => {
@@ -179,7 +159,7 @@ export const Library: React.FC = () => {
                 <div className="flex items-center gap-4 mt-8">
                   <button
                     type="button"
-                    onClick={() => vm.playJourney(current)}
+                    onClick={() => vm.openJourney(current)}
                     className="flex items-center justify-center gap-2 h-12 sm:h-14 px-7 sm:px-9 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_20px_rgba(239,191,4,0.35)]"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
@@ -246,8 +226,7 @@ export const Library: React.FC = () => {
           </p>
         </div>
 
-        {/* tabs */}
-        <div className="flex justify-center mb-8">
+        <div className="mb-10 flex flex-wrap items-center gap-3">
           <div className="inline-flex items-center gap-1 rounded-full bg-white/5 border border-white/10 p-1">
             {TABS.map((tab) => (
               <button
@@ -262,13 +241,91 @@ export const Library: React.FC = () => {
               </button>
             ))}
           </div>
-        </div>
 
-        {/* search (sermons tab only) */}
-        {vm.activeTab !== 'teachers' && (
-          <div className="flex justify-center mb-12">
-            <div className="relative w-full max-w-xs" ref={categoryDropdownRef}>
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto sm:ml-auto">
+            {vm.activeTab === 'sermons' && (
+              <div className="relative w-full sm:w-64" ref={categoryDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setCategoryOpen((prev) => !prev)}
+                  className={`flex w-full items-center justify-between h-12 px-5 rounded-full border text-sm font-bold tracking-wide transition-colors duration-300 ${
+                    vm.activeCategory ? 'bg-royal-purple-dark border-royal-purple-dark text-white' : 'bg-white/5 border-white/10 text-gray-300 hover:border-gold/40'
+                  }`}
+                >
+                  <span className="truncate">{vm.activeCategory ?? 'Filter by topic'}</span>
+                  <svg
+                    className={`w-4 h-4 shrink-0 ml-2 transition-transform duration-300 ${categoryOpen ? 'rotate-180' : ''} ${vm.activeCategory ? 'text-white' : 'text-gray-500'}`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
+                <AnimatePresence>
+                  {categoryOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute left-0 right-0 z-30 mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-background-dark)] shadow-2xl"
+                    >
+                      <div className="border-b border-white/10 p-3">
+                        <div className="relative">
+                          <input
+                            autoFocus
+                            type="text"
+                            value={categorySearch}
+                            onChange={(e) => setCategorySearch(e.target.value)}
+                            placeholder="Search topics..."
+                            className="w-full h-10 pl-4 pr-9 rounded-full bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold/60 transition-colors"
+                          />
+                          <svg className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="7" />
+                            <path strokeLinecap="round" d="M21 21l-4.3-4.3" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      <div data-lenis-prevent className="max-h-72 overflow-y-auto">
+                        {vm.activeCategory && (
+                          <button
+                            type="button"
+                            onClick={() => selectCategory(null)}
+                            className="flex w-full items-center px-5 py-3 text-sm font-bold text-gold hover:bg-white/5 transition-colors"
+                          >
+                            Clear filter
+                          </button>
+                        )}
+
+                        {filteredCategories.length === 0 ? (
+                          <p className="px-5 py-6 text-center text-sm text-gray-500">No topics found.</p>
+                        ) : (
+                          filteredCategories.map((cat) => (
+                            <button
+                              key={cat.name}
+                              type="button"
+                              onClick={() => selectCategory(cat.name)}
+                              className={`flex w-full items-center justify-between px-5 py-3 text-sm transition-colors hover:bg-white/5 ${
+                                vm.activeCategory === cat.name ? 'text-gold' : 'text-gray-300'
+                              }`}
+                            >
+                              <span>{cat.name}</span>
+                              <span className="text-gray-600">{cat.count}</span>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            <div className="relative w-full sm:w-56">
               <svg className="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="7" />
                 <path strokeLinecap="round" d="M21 21l-4.3-4.3" />
@@ -277,97 +334,12 @@ export const Library: React.FC = () => {
                 type="text"
                 value={vm.searchQuery}
                 onChange={(e) => vm.setSearchQuery(e.target.value)}
-                placeholder="Search sermons by title..."
+                placeholder="Search sermons"
                 className="w-full h-12 pl-12 pr-4 rounded-full bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-gold/60 transition-colors"
               />
             </div>
           </div>
-        )}
-
-        {/* category dropdown, searchable — built for a long list of topics (sermons + series tabs) */}
-        {vm.activeTab === 'sermons' && (
-          <div className="flex justify-center mb-6">
-            <div className="relative w-full max-w-md">
-              <button
-                type="button"
-                onClick={() => setCategoryOpen((prev) => !prev)}
-                className={`flex w-full items-center justify-between h-12 px-5 rounded-full border text-sm font-bold tracking-wide transition-colors duration-300 ${
-                  vm.activeCategory ? 'bg-royal-purple-dark border-royal-purple-dark text-white' : 'bg-white/5 border-white/10 text-gray-300 hover:border-gold/40'
-                }`}
-              >
-                <span className="truncate">{vm.activeCategory ?? 'Filter by topic'}</span>
-                <svg
-                  className={`w-4 h-4 shrink-0 ml-2 transition-transform duration-300 ${categoryOpen ? 'rotate-180' : ''} ${vm.activeCategory ? 'text-white' : 'text-gray-500'}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              <AnimatePresence>
-                {categoryOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute left-0 right-0 z-30 mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-background-dark)] shadow-2xl"
-                  >
-                    <div className="border-b border-white/10 p-3">
-                      <div className="relative">
-                        <input
-                          autoFocus
-                          type="text"
-                          value={categorySearch}
-                          onChange={(e) => setCategorySearch(e.target.value)}
-                          placeholder="Search topics..."
-                          className="w-full h-10 pl-4 pr-9 rounded-full bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold/60 transition-colors"
-                        />
-                        <svg className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                          <circle cx="11" cy="11" r="7" />
-                          <path strokeLinecap="round" d="M21 21l-4.3-4.3" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    <div className="max-h-72 overflow-y-auto">
-                      {vm.activeCategory && (
-                        <button
-                          type="button"
-                          onClick={() => selectCategory(null)}
-                          className="flex w-full items-center px-5 py-3 text-sm font-bold text-gold hover:bg-white/5 transition-colors"
-                        >
-                          Clear filter
-                        </button>
-                      )}
-
-                      {filteredCategories.length === 0 ? (
-                        <p className="px-5 py-6 text-center text-sm text-gray-500">No topics found.</p>
-                      ) : (
-                        filteredCategories.map((cat) => (
-                          <button
-                            key={cat.name}
-                            type="button"
-                            onClick={() => selectCategory(cat.name)}
-                            className={`flex w-full items-center justify-between px-5 py-3 text-sm transition-colors hover:bg-white/5 ${
-                              vm.activeCategory === cat.name ? 'text-gold' : 'text-gray-300'
-                            }`}
-                          >
-                            <span>{cat.name}</span>
-                            <span className="text-gray-600">{cat.count}</span>
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        )}
+        </div>
 
         <AnimatePresence mode="wait">
           <motion.div
@@ -441,7 +413,7 @@ export const Library: React.FC = () => {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              vm.playJourney(item);
+                              vm.openJourney(item);
                             }}
                             className="mt-2 px-6 py-2 rounded-full bg-royal-purple-dark text-white text-xs font-bold tracking-wide hover:bg-royal-purple-light transition-colors duration-300"
                           >
@@ -528,22 +500,6 @@ export const Library: React.FC = () => {
               </div>
             )}
 
-            {vm.activeTab === 'teachers' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {TEACHERS.map((teacher) => (
-                  <div key={teacher.name} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                    <div className="relative h-16 w-16 shrink-0 rounded-full overflow-hidden ring-2 ring-gold/60">
-                      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${teacher.image})` }} />
-                    </div>
-                    <div>
-                      <h4 className="font-heading font-black uppercase tracking-tight text-white text-base">{teacher.name}</h4>
-                      <p className="text-gold text-xs font-bold uppercase tracking-widest mt-0.5">{teacher.role}</p>
-                      <p className="text-gray-400 text-xs mt-1">{teacher.sermonCount} messages</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </motion.div>
         </AnimatePresence>
       </section>
@@ -674,7 +630,7 @@ export const Library: React.FC = () => {
                   onClick={() => {
                     const journey = vm.seeMoreJourney;
                     vm.closeSeeMore();
-                    if (journey) vm.playJourney(journey);
+                    if (journey) vm.openJourney(journey);
                   }}
                   className="flex items-center justify-center gap-2 h-12 px-7 mt-7 rounded-full bg-gold text-royal-purple-dark font-black tracking-wide hover:bg-gold-light hover:scale-105 active:scale-95 transition-all duration-300"
                 >
@@ -704,7 +660,7 @@ export const Library: React.FC = () => {
               {embed?.kind === 'iframe' && (
                 <iframe
                   className="w-full h-full"
-                  src={embed.src}
+                  src={vm.playing ? `${embed.src}${embed.src.includes('?') ? '&' : '?'}autoplay=1` : embed.src}
                   title={vm.nowPlaying.part.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -740,7 +696,7 @@ export const Library: React.FC = () => {
                       <span className="w-1 h-1 rounded-full bg-gray-400" />
                       <span className="text-gray-300">{partLength(vm.nowPlaying.part) || formatLongDate(vm.nowPlaying.part.createdAt)}</span>
                     </div>
-                    <p className="mt-4 text-gray-300 text-sm sm:text-base leading-relaxed whitespace-pre-line line-clamp-6">
+                    <p className="mt-4 text-gray-300 text-sm sm:text-base leading-relaxed whitespace-pre-line">
                       {vm.nowPlaying.part.readingText || journeyOverview(vm.nowPlaying.journey)}
                     </p>
                     {embed && (
