@@ -86,6 +86,6 @@ export interface JourneyFilters {
 
 export const DEFAULT_FILTERS: JourneyFilters = {
     status: 'all',
-    sortBy: 'updated_at',
+    sortBy: 'created_at',
     sortDir: 'desc',
 };
